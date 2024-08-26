@@ -86,7 +86,10 @@ def benchmark_speed_cross_entropy_wrapper():
     dir_name = "cross_entropy_speed"
     output_dir = os.path.join(curr_dir, dir_name)
     os.makedirs(output_dir, exist_ok=True)
-    bench_speed_cross_entropy.run(save_path=output_dir, print_data=True)
+    dfs = bench_speed_cross_entropy.run(save_path=output_dir, print_data=False, return_df=True)
+    for df in dfs:
+        print(df.head())
+        print(df.info())
 
 
 @triton.testing.perf_report(

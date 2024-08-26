@@ -21,3 +21,13 @@ checkstyle:
 # We have to explicitly set HF_DATASETS_OFFLINE=1, or dataset will silently try to send metrics and timeout (80s) https://github.com/huggingface/datasets/blob/37a603679f451826cfafd8aae00738b01dcb9d58/src/datasets/load.py#L286
 test-convergence:
 	HF_DATASETS_OFFLINE=1 python -m pytest --disable-warnings test/convergence
+
+
+# Command to run all benchmark scripts and update benchmarking data file
+BENCHMARK_DIR = benchmark/scripts
+BENCHMARK_SCRIPTS = $(wildcard $(BENCHMARK_DIR)/benchmark_*.py)
+run-benchmarks:
+	@for script in $(BENCHMARK_SCRIPTS); do \
+		echo "Running benchmark: $$script"; \
+		python $$script; \
+	done
