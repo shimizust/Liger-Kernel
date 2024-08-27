@@ -1,8 +1,10 @@
 import os
 import time
+from dataclasses import asdict, dataclass
 from typing import Callable, List
-from dataclasses import dataclass, asdict
+
 import torch
+
 
 @dataclass
 class BenchmarkData:
@@ -10,6 +12,7 @@ class BenchmarkData:
     BenchmarkData is a dataclass to store the benchmark data for a single benchmark run.
     For example, the data collected after running rms_norm speed benchmark from a single provider.
     """
+
     kernel_name: str
     kernel_operation: str
     kernel_provider: str
@@ -22,6 +25,7 @@ class BenchmarkData:
     y_values: List[float]
     benchmark_config: str
     timestamp: str
+
 
 @dataclass
 class BenchmarkDataCSVRow:
@@ -37,6 +41,7 @@ class BenchmarkDataCSVRow:
     y_value: float
     benchmark_config: str
     timestamp: str
+
 
 def _test_memory(func: Callable, _iter: int = 10) -> float:
     total_mem = []
@@ -95,7 +100,11 @@ def get_gpu_dir_name():
         raise Exception("Benchmarks can only be run on GPU.")
 
 
-def update_benchmark_data_csv(benchmark_data_list: List[BenchmarkData], filename: str = "data/all_benchmark_data.csv", overwrite: bool = True):
+def update_benchmark_data_csv(
+    benchmark_data_list: List[BenchmarkData],
+    filename: str = "data/all_benchmark_data.csv",
+    overwrite: bool = True,
+):
     """
     Update the CSV file with the new benchmark data. If the file does not exist, create it.
     If an entry already exists for the benchmark, then overwrite it if `overwrite` is True.
@@ -106,7 +115,6 @@ def update_benchmark_data_csv(benchmark_data_list: List[BenchmarkData], filename
     # Make filename path relative to current file
     filename_abs_path = os.path.join(get_current_file_directory(), "..", filename)
     file_exists = os.path.isfile(filename_abs_path)
-
 
     with open(filename, mode="a") as file:
         writer = csv.DictWriter(file, fieldnames=fieldnames)
@@ -122,8 +130,6 @@ def update_benchmark_data_csv(benchmark_data_list: List[BenchmarkData], filename
             # Need to convert benchmark_data into multiple rows based on x_values and y_values
             for x_value, y_value in zip(x_values, y_values):
                 row = BenchmarkDataCSVRow(
-                    x_value=x_value,
-                    y_value=y_value,
-                    **benchmark_data_dict
+                    x_value=x_value, y_value=y_value, **benchmark_data_dict
                 )
                 writer.writerow(benchmark_data.__dict__)

@@ -90,7 +90,6 @@ def bench_speed_geglu(N, dtype, provider, mode="forward", device="cuda"):
             full, quantiles=quantiles, grad_to_none=[x], rep=10
         )
 
-    
     return ms, max_ms, min_ms
 
 
