@@ -89,6 +89,8 @@ class SingleBenchmarkRunInput:
     mode: str
     extra_args: Dict[str, Any]
 
+@dataclass
+
 def bench_speed_cross_entropy(input: SingleBenchmarkRunInput):
     torch_ce = CrossEntropyLoss()
     liger_ce = LigerCrossEntropyLoss()
@@ -149,11 +151,31 @@ def bench_speed_cross_entropy(input: SingleBenchmarkRunInput):
 #             plot_name="cross-entropy-fwd-speed-benchmark",
 #             args={"B": 8, "T": 2048, "mode": "forward", "dtype": torch.bfloat16},
 #         ),
-def run_benchmarks(x_values, provider, mode, extra_args):
-    benchmark_runs = []
-    for x in x_values:
-    
-    
+
+bench_test_fn = bench_speed_cross_entropy
+providers = ["liger", "huggingface"]
+x_values = [2**i for i in range(12, 18)]
+modes = [None]
+extra_args = {"B": 8, "T": 2048}
+
+run_benchmarks(bench_test_fn, x_values, providers, modes, extra_args)
+
+def run_benchmarks(
+    bench_test_fn: Callable,
+    x_values: List[Any],
+    providers: List[str],
+    modes: Optional[List[str]] = [None],
+    extra_args: Optional[Dict[str, Any]] = None
+):
+    """
+    Run benchmarks given a bench_test_fn that takes in a SingleBenchmarkRunInput
+    a set of x_values to run, provider (e.g. liger, huggingface), optional mode (e.g. forward, backward, full)
+    to run the kernel, and extra_args for running the benchmark functions. Extra_args should 
+    """
+
+    assert len(modes) >= 1
+    assert len(providers) >= 1
+
     benchmark_runs = [
         SingleBenchmarkRunInput(x=2**i, provider="liger", mode="forward", extra_args={"B": 8, "T": 2048}),
         SingleBenchmarkRunInput(x=2**i, provider="huggingface", mode="forward", extra_args={"B": 8, "T": 2048}),
