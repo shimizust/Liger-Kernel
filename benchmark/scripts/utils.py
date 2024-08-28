@@ -1,9 +1,17 @@
 import os
 import time
 from dataclasses import asdict, dataclass
-from typing import Callable, List
-
+from typing import Callable, List, Any, Dict, Optional
+import csv
 import torch
+
+
+@dataclass
+class SingleBenchmarkRunInput:
+    x: int
+    kernel_provider: str
+    kernel_operation_mode: str
+    extra_benchmark_config: Dict[str, Any]
 
 
 @dataclass
@@ -12,25 +20,24 @@ class BenchmarkData:
     BenchmarkData is a dataclass to store the benchmark data for a single benchmark run.
     For example, the data collected after running rms_norm speed benchmark from a single provider.
     """
-
     kernel_name: str
-    kernel_operation: str
+    kernel_operation_mode: str
     kernel_provider: str
     metric_name: str
     metric_unit: str
     gpu_name: str
     x_name: str
     x_label: str
-    x_values: List[float]
-    y_values: List[float]
-    benchmark_config: str
+    x_values: List[Any]
+    y_values: List[Any]
+    extra_benchmark_config: str
     timestamp: str
 
 
 @dataclass
 class BenchmarkDataCSVRow:
     kernel_name: str
-    kernel_operation: str
+    kernel_operation_mode: str
     kernel_provider: str
     metric_name: str
     metric_unit: str
@@ -39,7 +46,7 @@ class BenchmarkDataCSVRow:
     x_label: str
     x_value: float
     y_value: float
-    benchmark_config: str
+    extra_benchmark_config: str
     timestamp: str
 
 
@@ -89,20 +96,21 @@ def _print_speed_banner():
     print("**************************************")
 
 
-def get_gpu_dir_name():
+def get_gpu_name():
     """
     Returns the current GPU name, formatted to serve as a directory name
     """
     if torch.cuda.is_available():
         gpu_name = torch.cuda.get_device_name(torch.cuda.current_device())
-        return gpu_name.lower().replace(" ", "_")
+        return gpu_name
+        # return gpu_name.lower().replace(" ", "_")
     else:
         raise Exception("Benchmarks can only be run on GPU.")
 
 
 def update_benchmark_data_csv(
     benchmark_data_list: List[BenchmarkData],
-    filename: str = "data/all_benchmark_data.csv",
+    filename: str = "all_benchmark_data.csv",
     overwrite: bool = True,
 ):
     """
@@ -113,10 +121,10 @@ def update_benchmark_data_csv(
     fieldnames = BenchmarkDataCSVRow.__annotations__.keys()
 
     # Make filename path relative to current file
-    filename_abs_path = os.path.join(get_current_file_directory(), "..", filename)
+    filename_abs_path = os.path.join(get_current_file_directory(), "../data", filename)
     file_exists = os.path.isfile(filename_abs_path)
 
-    with open(filename, mode="a") as file:
+    with open(filename_abs_path, mode="a") as file:
         writer = csv.DictWriter(file, fieldnames=fieldnames)
 
         if not file_exists:
@@ -132,4 +140,4 @@ def update_benchmark_data_csv(
                 row = BenchmarkDataCSVRow(
                     x_value=x_value, y_value=y_value, **benchmark_data_dict
                 )
-                writer.writerow(benchmark_data.__dict__)
+                writer.writerow(asdict(row))
