@@ -23,10 +23,10 @@ test-convergence:
 	HF_DATASETS_OFFLINE=1 python -m pytest --disable-warnings test/convergence
 
 
-# Command to run all benchmark scripts and update benchmarking data file
+# Command to run all kernel benchmark scripts and update benchmarking data file
 # By default this doesn't overwrite existing data for the same benchmark experiment
 # run with `make run-benchmarks OVERWRITE=1` to overwrite existing benchmark data
-BENCHMARK_DIR = benchmark/scripts
+BENCHMARK_DIR = benchmark/kernel/scripts
 BENCHMARK_SCRIPTS = $(wildcard $(BENCHMARK_DIR)/benchmark_*.py)
 OVERWRITE ?= 0
 

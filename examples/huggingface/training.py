@@ -6,7 +6,10 @@ import transformers
 from callback import EfficiencyCallback
 from trl import DataCollatorForCompletionOnlyLM, SFTTrainer
 
-from liger_kernel.transformers import AutoLigerKernelForCausalLM
+from liger_kernel.transformers import (
+    AutoLigerKernelForCausalLM,
+    apply_liger_kernel_to_llama,
+)
 
 
 @dataclass
@@ -16,9 +19,11 @@ class CustomArguments:
     max_seq_length: int = 512
     use_liger: bool = False
 
+bos_token = "<s>"
+# bos_token = "<|begin_of_text|>"
 
 def formatting_prompts_func(example):
-    return example["text"]
+    return [text.replace("### Response:", bos_token) for text in example["text"]]
 
 
 def train():
@@ -38,7 +43,8 @@ def train():
     )
     train_dataset = dataset["train"]
     eval_dataset = dataset["test"]
-    response_prompt = tokenizer.encode("### Response:\n", add_special_tokens=False)
+
+    response_prompt = bos_token
     collator = DataCollatorForCompletionOnlyLM(
         tokenizer=tokenizer,
         response_template=response_prompt,
@@ -51,10 +57,6 @@ def train():
             trust_remote_code=True,
             use_cache=False,
             torch_dtype=torch.bfloat16,
-            # These args will get passed to the appropriate apply_liger_kernel_to_* function
-            # to override the default settings
-            # cross_entropy=True,
-            # fused_linear_cross_entropy=False,
         )
     else:
         model = transformers.AutoModelForCausalLM.from_pretrained(
@@ -63,6 +65,15 @@ def train():
             use_cache=False,
             torch_dtype=torch.bfloat16,
         )
+    # if custom_args.use_liger:
+    #     apply_liger_kernel_to_llama()
+    
+    # model = transformers.AutoModelForCausalLM.from_pretrained(
+    #     custom_args.model_name,
+    #     trust_remote_code=True,
+    #     use_cache=False,
+    #     torch_dtype=torch.bfloat16,
+    # )
 
     trainer = SFTTrainer(
         model=model,
