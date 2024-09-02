@@ -1,9 +1,9 @@
 import os
-
+import argparse
 import torch
 import triton
 from torch.nn import CrossEntropyLoss
-from utils import _test_memory, get_current_file_directory, get_gpu_name, update_benchmark_data_csv, SingleBenchmarkRunInput, SingleBenchmarkRunOuput, BenchmarkData, get_mean_std_stats, LIGER_KERNEL_VERSION, run_benchmarks
+from utils import _test_memory, get_current_file_directory, get_gpu_name, update_benchmark_data_csv, SingleBenchmarkRunInput, SingleBenchmarkRunOuput, BenchmarkData, get_mean_std_stats, LIGER_KERNEL_VERSION, run_benchmarks, parse_benchmark_script_args
 from typing import List, Union, Dict, Any, Callable, Optional
 from liger_kernel.transformers.cross_entropy import LigerCrossEntropyLoss
 import json
@@ -84,6 +84,8 @@ def bench_speed_cross_entropy(input: SingleBenchmarkRunInput) -> SingleBenchmark
 
 
 if __name__ == "__main__":
+    args = parse_benchmark_script_args()
+
     common_configs = {
         "kernel_name": "cross_entropy",
         "x_name": "V",
@@ -91,7 +93,7 @@ if __name__ == "__main__":
         "x_values": [2**i for i in range(12, 18)],
         "kernel_providers": ["liger", "huggingface"],
         "extra_benchmark_configs": [{"B": 8, "T": 2048}],
-        "overwrite": True
+        "overwrite": args.overwrite
     }
 
     run_benchmarks(

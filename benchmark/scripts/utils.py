@@ -9,6 +9,7 @@ import numpy as np
 from itertools import zip_longest
 from collections import OrderedDict
 import json
+import argparse
 
 
 LIGER_KERNEL_VERSION = version('liger-kernel')
@@ -168,11 +169,11 @@ def update_benchmark_data_csv(
         return (
             row["kernel_name"],
             row["kernel_provider"],
-            row["kernel_operation_mode"],
+            row["kernel_operation_mode"] if row["kernel_operation_mode"] else "",
             row["metric_name"],
             row["x_name"],
-            row["x_value"],
-            row["extra_benchmark_config_str"],
+            str(row["x_value"]),
+            row["extra_benchmark_config_str"] if row["extra_benchmark_config_str"] else "",
             row["gpu_name"],
         )
 
@@ -191,7 +192,7 @@ def update_benchmark_data_csv(
                 existing_data.append(row)
 
     existing_data_dict = OrderedDict((create_unique_key(row), row) for row in existing_data)
-
+    print(existing_data_dict.keys())
     for benchmark_data in benchmark_data_list:
         benchmark_data_dict = asdict(benchmark_data)
         x_values = benchmark_data_dict.pop("x_values")
@@ -283,3 +284,17 @@ def run_benchmarks(
                 benchmark_data_list.append(benchmark_run_data)
 
     update_benchmark_data_csv(benchmark_data_list=benchmark_data_list, overwrite=overwrite)
+
+
+def parse_benchmark_script_args():
+    parser = argparse.ArgumentParser(description="Benchmarking script for Liger-Kernel")
+    
+    # Add an optional --overwrite flag
+    parser.add_argument(
+        '--overwrite',
+        action='store_true',
+        help="Flag to overwrite existing benchmark data with current run.",
+    )
+
+    args = parser.parse_args()
+    return args

@@ -41,6 +41,7 @@ setup(
             "pytest>=7.1.2",
             "datasets>=2.19.2",
             "jupyter==1.0.0",
+            "tornado==4.5.3",
             "seaborn",
         ]
     },
