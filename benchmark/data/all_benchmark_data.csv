@@ -1,25 +1,37 @@
-kernel_name,kernel_operation_mode,kernel_provider,metric_name,metric_unit,gpu_name,x_name,x_label,x_value,y_value,extra_benchmark_config,timestamp
-cross_entropy,forward,liger,speed,ms,NVIDIA A100-SXM4-80GB,V,vocab size,4096,0.5280640125274658,"{""B"": 8, ""T"": 2048}",1724803472.0041637
-cross_entropy,forward,liger,speed,ms,NVIDIA A100-SXM4-80GB,V,vocab size,8192,0.7707200050354004,"{""B"": 8, ""T"": 2048}",1724803472.0041637
-cross_entropy,forward,liger,speed,ms,NVIDIA A100-SXM4-80GB,V,vocab size,16384,1.400480031967163,"{""B"": 8, ""T"": 2048}",1724803472.0041637
-cross_entropy,forward,liger,speed,ms,NVIDIA A100-SXM4-80GB,V,vocab size,32768,2.8061118125915527,"{""B"": 8, ""T"": 2048}",1724803472.0041637
-cross_entropy,forward,liger,speed,ms,NVIDIA A100-SXM4-80GB,V,vocab size,65536,6.791584014892578,"{""B"": 8, ""T"": 2048}",1724803472.0041637
-cross_entropy,forward,liger,speed,ms,NVIDIA A100-SXM4-80GB,V,vocab size,131072,15.004223823547363,"{""B"": 8, ""T"": 2048}",1724803472.0041637
-cross_entropy,forward,huggingface,speed,ms,NVIDIA A100-SXM4-80GB,V,vocab size,4096,0.8754240274429321,"{""B"": 8, ""T"": 2048}",1724803472.980639
-cross_entropy,forward,huggingface,speed,ms,NVIDIA A100-SXM4-80GB,V,vocab size,8192,1.1896800994873047,"{""B"": 8, ""T"": 2048}",1724803472.980639
-cross_entropy,forward,huggingface,speed,ms,NVIDIA A100-SXM4-80GB,V,vocab size,16384,1.9485440254211426,"{""B"": 8, ""T"": 2048}",1724803472.980639
-cross_entropy,forward,huggingface,speed,ms,NVIDIA A100-SXM4-80GB,V,vocab size,32768,5.318991661071777,"{""B"": 8, ""T"": 2048}",1724803472.980639
-cross_entropy,forward,huggingface,speed,ms,NVIDIA A100-SXM4-80GB,V,vocab size,65536,10.612095832824707,"{""B"": 8, ""T"": 2048}",1724803472.980639
-cross_entropy,forward,huggingface,speed,ms,NVIDIA A100-SXM4-80GB,V,vocab size,131072,20.741199493408203,"{""B"": 8, ""T"": 2048}",1724803472.980639
-cross_entropy,forward,liger,speed,ms,NVIDIA A100-SXM4-80GB,V,vocab size,4096,0.47307199239730835,"{""B"": 8, ""T"": 2048}",1724803516.3478298
-cross_entropy,forward,liger,speed,ms,NVIDIA A100-SXM4-80GB,V,vocab size,8192,0.7451199889183044,"{""B"": 8, ""T"": 2048}",1724803516.3478298
-cross_entropy,forward,liger,speed,ms,NVIDIA A100-SXM4-80GB,V,vocab size,16384,1.395967960357666,"{""B"": 8, ""T"": 2048}",1724803516.3478298
-cross_entropy,forward,liger,speed,ms,NVIDIA A100-SXM4-80GB,V,vocab size,32768,2.797408103942871,"{""B"": 8, ""T"": 2048}",1724803516.3478298
-cross_entropy,forward,liger,speed,ms,NVIDIA A100-SXM4-80GB,V,vocab size,65536,6.788095951080322,"{""B"": 8, ""T"": 2048}",1724803516.3478298
-cross_entropy,forward,liger,speed,ms,NVIDIA A100-SXM4-80GB,V,vocab size,131072,15.011983871459961,"{""B"": 8, ""T"": 2048}",1724803516.3478298
-cross_entropy,forward,huggingface,speed,ms,NVIDIA A100-SXM4-80GB,V,vocab size,4096,0.8745119571685791,"{""B"": 8, ""T"": 2048}",1724803517.3230674
-cross_entropy,forward,huggingface,speed,ms,NVIDIA A100-SXM4-80GB,V,vocab size,8192,1.1905920505523682,"{""B"": 8, ""T"": 2048}",1724803517.3230674
-cross_entropy,forward,huggingface,speed,ms,NVIDIA A100-SXM4-80GB,V,vocab size,16384,1.9510079622268677,"{""B"": 8, ""T"": 2048}",1724803517.3230674
-cross_entropy,forward,huggingface,speed,ms,NVIDIA A100-SXM4-80GB,V,vocab size,32768,5.316400051116943,"{""B"": 8, ""T"": 2048}",1724803517.3230674
-cross_entropy,forward,huggingface,speed,ms,NVIDIA A100-SXM4-80GB,V,vocab size,65536,10.605792045593262,"{""B"": 8, ""T"": 2048}",1724803517.3230674
-cross_entropy,forward,huggingface,speed,ms,NVIDIA A100-SXM4-80GB,V,vocab size,131072,20.75267219543457,"{""B"": 8, ""T"": 2048}",1724803517.3230674
+kernel_name,kernel_provider,kernel_operation_mode,metric_name,metric_unit,x_name,x_label,x_value,y_value_mean,y_value_std,extra_benchmark_config_str,gpu_name,timestamp,liger_version
+cross_entropy,liger,forward,speed,ms,V,vocab size,4096,0.5306003093719482,,"{""B"": 8, ""T"": 2048}",NVIDIA A100-SXM4-80GB,2024-09-02 19:24:02,0.1.1
+cross_entropy,liger,forward,speed,ms,V,vocab size,8192,0.7835990190505981,,"{""B"": 8, ""T"": 2048}",NVIDIA A100-SXM4-80GB,2024-09-02 19:24:02,0.1.1
+cross_entropy,liger,forward,speed,ms,V,vocab size,16384,1.400032877922058,,"{""B"": 8, ""T"": 2048}",NVIDIA A100-SXM4-80GB,2024-09-02 19:24:02,0.1.1
+cross_entropy,liger,forward,speed,ms,V,vocab size,32768,2.8015494346618652,,"{""B"": 8, ""T"": 2048}",NVIDIA A100-SXM4-80GB,2024-09-02 19:24:02,0.1.1
+cross_entropy,liger,forward,speed,ms,V,vocab size,65536,6.7926177978515625,,"{""B"": 8, ""T"": 2048}",NVIDIA A100-SXM4-80GB,2024-09-02 19:24:02,0.1.1
+cross_entropy,liger,forward,speed,ms,V,vocab size,131072,15.007691383361816,,"{""B"": 8, ""T"": 2048}",NVIDIA A100-SXM4-80GB,2024-09-02 19:24:02,0.1.1
+cross_entropy,huggingface,forward,speed,ms,V,vocab size,4096,0.8745619654655457,,"{""B"": 8, ""T"": 2048}",NVIDIA A100-SXM4-80GB,2024-09-02 19:24:03,0.1.1
+cross_entropy,huggingface,forward,speed,ms,V,vocab size,8192,1.1882994174957275,,"{""B"": 8, ""T"": 2048}",NVIDIA A100-SXM4-80GB,2024-09-02 19:24:03,0.1.1
+cross_entropy,huggingface,forward,speed,ms,V,vocab size,16384,1.9508339166641235,,"{""B"": 8, ""T"": 2048}",NVIDIA A100-SXM4-80GB,2024-09-02 19:24:03,0.1.1
+cross_entropy,huggingface,forward,speed,ms,V,vocab size,32768,5.317356586456299,,"{""B"": 8, ""T"": 2048}",NVIDIA A100-SXM4-80GB,2024-09-02 19:24:03,0.1.1
+cross_entropy,huggingface,forward,speed,ms,V,vocab size,65536,10.613170623779297,,"{""B"": 8, ""T"": 2048}",NVIDIA A100-SXM4-80GB,2024-09-02 19:24:03,0.1.1
+cross_entropy,huggingface,forward,speed,ms,V,vocab size,131072,20.747119903564453,,"{""B"": 8, ""T"": 2048}",NVIDIA A100-SXM4-80GB,2024-09-02 19:24:03,0.1.1
+cross_entropy,liger,full,speed,ms,V,vocab size,4096,0.8584806323051453,,"{""B"": 8, ""T"": 2048}",NVIDIA A100-SXM4-80GB,2024-09-02 19:24:04,0.1.1
+cross_entropy,liger,full,speed,ms,V,vocab size,8192,1.4560893774032593,,"{""B"": 8, ""T"": 2048}",NVIDIA A100-SXM4-80GB,2024-09-02 19:24:04,0.1.1
+cross_entropy,liger,full,speed,ms,V,vocab size,16384,2.7406606674194336,,"{""B"": 8, ""T"": 2048}",NVIDIA A100-SXM4-80GB,2024-09-02 19:24:04,0.1.1
+cross_entropy,liger,full,speed,ms,V,vocab size,32768,5.418300151824951,,"{""B"": 8, ""T"": 2048}",NVIDIA A100-SXM4-80GB,2024-09-02 19:24:04,0.1.1
+cross_entropy,liger,full,speed,ms,V,vocab size,65536,12.8306245803833,,"{""B"": 8, ""T"": 2048}",NVIDIA A100-SXM4-80GB,2024-09-02 19:24:04,0.1.1
+cross_entropy,liger,full,speed,ms,V,vocab size,131072,25.579030990600586,,"{""B"": 8, ""T"": 2048}",NVIDIA A100-SXM4-80GB,2024-09-02 19:24:04,0.1.1
+cross_entropy,huggingface,full,speed,ms,V,vocab size,4096,2.2256929874420166,,"{""B"": 8, ""T"": 2048}",NVIDIA A100-SXM4-80GB,2024-09-02 19:24:06,0.1.1
+cross_entropy,huggingface,full,speed,ms,V,vocab size,8192,3.6009743213653564,,"{""B"": 8, ""T"": 2048}",NVIDIA A100-SXM4-80GB,2024-09-02 19:24:06,0.1.1
+cross_entropy,huggingface,full,speed,ms,V,vocab size,16384,6.794406414031982,,"{""B"": 8, ""T"": 2048}",NVIDIA A100-SXM4-80GB,2024-09-02 19:24:06,0.1.1
+cross_entropy,huggingface,full,speed,ms,V,vocab size,32768,15.488869667053223,,"{""B"": 8, ""T"": 2048}",NVIDIA A100-SXM4-80GB,2024-09-02 19:24:06,0.1.1
+cross_entropy,huggingface,full,speed,ms,V,vocab size,65536,30.76384925842285,,"{""B"": 8, ""T"": 2048}",NVIDIA A100-SXM4-80GB,2024-09-02 19:24:06,0.1.1
+cross_entropy,huggingface,full,speed,ms,V,vocab size,131072,60.53855895996094,,"{""B"": 8, ""T"": 2048}",NVIDIA A100-SXM4-80GB,2024-09-02 19:24:06,0.1.1
+cross_entropy,liger,full,memory,MB,V,vocab size,4096,256.32861328125,0.0,"{""B"": 8, ""T"": 2048}",NVIDIA A100-SXM4-80GB,2024-09-02 19:24:06,0.1.1
+cross_entropy,liger,full,memory,MB,V,vocab size,8192,512.32861328125,0.0,"{""B"": 8, ""T"": 2048}",NVIDIA A100-SXM4-80GB,2024-09-02 19:24:06,0.1.1
+cross_entropy,liger,full,memory,MB,V,vocab size,16384,1024.32861328125,0.0,"{""B"": 8, ""T"": 2048}",NVIDIA A100-SXM4-80GB,2024-09-02 19:24:06,0.1.1
+cross_entropy,liger,full,memory,MB,V,vocab size,32768,2048.32861328125,0.0,"{""B"": 8, ""T"": 2048}",NVIDIA A100-SXM4-80GB,2024-09-02 19:24:06,0.1.1
+cross_entropy,liger,full,memory,MB,V,vocab size,65536,4096.32861328125,0.0,"{""B"": 8, ""T"": 2048}",NVIDIA A100-SXM4-80GB,2024-09-02 19:24:06,0.1.1
+cross_entropy,liger,full,memory,MB,V,vocab size,131072,8192.32861328125,0.0,"{""B"": 8, ""T"": 2048}",NVIDIA A100-SXM4-80GB,2024-09-02 19:24:06,0.1.1
+cross_entropy,huggingface,full,memory,MB,V,vocab size,4096,1254.5259765625,76.8,"{""B"": 8, ""T"": 2048}",NVIDIA A100-SXM4-80GB,2024-09-02 19:24:06,0.1.1
+cross_entropy,huggingface,full,memory,MB,V,vocab size,8192,2508.9259765625,153.6,"{""B"": 8, ""T"": 2048}",NVIDIA A100-SXM4-80GB,2024-09-02 19:24:06,0.1.1
+cross_entropy,huggingface,full,memory,MB,V,vocab size,16384,5017.7259765625,307.2,"{""B"": 8, ""T"": 2048}",NVIDIA A100-SXM4-80GB,2024-09-02 19:24:06,0.1.1
+cross_entropy,huggingface,full,memory,MB,V,vocab size,32768,10035.3259765625,614.4,"{""B"": 8, ""T"": 2048}",NVIDIA A100-SXM4-80GB,2024-09-02 19:24:06,0.1.1
+cross_entropy,huggingface,full,memory,MB,V,vocab size,65536,20070.5259765625,1228.8,"{""B"": 8, ""T"": 2048}",NVIDIA A100-SXM4-80GB,2024-09-02 19:24:06,0.1.1
+cross_entropy,huggingface,full,memory,MB,V,vocab size,131072,40140.9259765625,2457.6,"{""B"": 8, ""T"": 2048}",NVIDIA A100-SXM4-80GB,2024-09-02 19:24:06,0.1.1
