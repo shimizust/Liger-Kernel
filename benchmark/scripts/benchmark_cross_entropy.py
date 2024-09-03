@@ -106,7 +106,7 @@ if __name__ == "__main__":
         kernel_operation_modes=["forward", "full"],
         metric_name="speed",
         metric_unit="ms",
-        **common_configsi
+        **common_configs
     )
     run_benchmarks(
         bench_test_fn=bench_memory_cross_entropy,
