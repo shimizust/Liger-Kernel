@@ -88,7 +88,7 @@ def bench_speed_cross_entropy(
     )
 
 
-if __name__ == "__main__":
+f __name__ == "__main__":
     args = parse_benchmark_script_args()
 
     common_configs = {
@@ -106,7 +106,7 @@ if __name__ == "__main__":
         kernel_operation_modes=["forward", "full"],
         metric_name="speed",
         metric_unit="ms",
-        **common_configs
+        **common_configsi
     )
     run_benchmarks(
         bench_test_fn=bench_memory_cross_entropy,
