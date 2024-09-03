@@ -1,17 +1,20 @@
-import os
-import argparse
 import torch
 import triton
 from torch.nn import CrossEntropyLoss
-from utils import _test_memory, get_current_file_directory, get_gpu_name, update_benchmark_data_csv, SingleBenchmarkRunInput, SingleBenchmarkRunOuput, BenchmarkData, get_mean_std_stats, LIGER_KERNEL_VERSION, run_benchmarks, parse_benchmark_script_args
-from typing import List, Union, Dict, Any, Callable, Optional
+from utils import (
+    SingleBenchmarkRunInput,
+    SingleBenchmarkRunOutput,
+    _test_memory,
+    parse_benchmark_script_args,
+    run_benchmarks,
+)
+
 from liger_kernel.transformers.cross_entropy import LigerCrossEntropyLoss
-import json
-from dataclasses import dataclass
-import time
 
 
-def bench_memory_cross_entropy(input: SingleBenchmarkRunInput) -> SingleBenchmarkRunOuput:
+def bench_memory_cross_entropy(
+    input: SingleBenchmarkRunInput,
+) -> SingleBenchmarkRunOutput:
     torch_ce = CrossEntropyLoss()
     liger_ce = LigerCrossEntropyLoss()
 
@@ -34,13 +37,15 @@ def bench_memory_cross_entropy(input: SingleBenchmarkRunInput) -> SingleBenchmar
         y.backward()
 
     mem_mean, mem_std = _test_memory(full)
-    return SingleBenchmarkRunOuput(
+    return SingleBenchmarkRunOutput(
         y_mean=mem_mean,
         y_std=mem_std,
     )
 
 
-def bench_speed_cross_entropy(input: SingleBenchmarkRunInput) -> SingleBenchmarkRunOuput:
+def bench_speed_cross_entropy(
+    input: SingleBenchmarkRunInput,
+) -> SingleBenchmarkRunOutput:
     torch_ce = CrossEntropyLoss()
     liger_ce = LigerCrossEntropyLoss()
 
@@ -78,7 +83,7 @@ def bench_speed_cross_entropy(input: SingleBenchmarkRunInput) -> SingleBenchmark
 
         y_mean = triton.testing.do_bench(full, rep=100, return_mode="mean")
 
-    return SingleBenchmarkRunOuput(
+    return SingleBenchmarkRunOutput(
         y_mean=y_mean,
     )
 
@@ -93,7 +98,7 @@ if __name__ == "__main__":
         "x_values": [2**i for i in range(12, 18)],
         "kernel_providers": ["liger", "huggingface"],
         "extra_benchmark_configs": [{"B": 8, "T": 2048}],
-        "overwrite": args.overwrite
+        "overwrite": args.overwrite,
     }
 
     run_benchmarks(
