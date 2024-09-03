@@ -151,7 +151,6 @@ def get_gpu_name():
     if torch.cuda.is_available():
         gpu_name = torch.cuda.get_device_name(torch.cuda.current_device())
         return gpu_name
-        # return gpu_name.lower().replace(" ", "_")
     else:
         raise Exception("Benchmarks can only be run on GPU.")
 
@@ -240,11 +239,13 @@ def update_benchmark_data_csv(
         for row in existing_data_dict.values():
             writer.writerow(row)
 
+
 class CustomEncoder(json.JSONEncoder):
     def default(self, obj):
         if isinstance(obj, torch.dtype):
             return str(obj)
         return super().default(self, obj)
+
 
 def run_benchmarks(
     bench_test_fn: Callable,
@@ -316,7 +317,9 @@ def run_benchmarks(
                     x_values=x_values,
                     y_values_mean=y_values_mean,
                     y_values_std=y_values_std,
-                    extra_benchmark_config_str=json.dumps(extra_benchmark_config, cls=CustomEncoder),
+                    extra_benchmark_config_str=json.dumps(
+                        extra_benchmark_config, cls=CustomEncoder
+                    ),
                     timestamp=get_formatted_time(),
                     liger_version=LIGER_KERNEL_VERSION,
                 )

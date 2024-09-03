@@ -54,13 +54,16 @@ class LigerLMHeadCE(torch.nn.Module):
 # Test the memory consumption of the linear fused cross entropy loss
 #############################################################################
 
-def bench_memory_fused_linear_cross_entropy(input: SingleBenchmarkRunInput) -> SingleBenchmarkRunOutput:
+
+def bench_memory_fused_linear_cross_entropy(
+    input: SingleBenchmarkRunInput,
+) -> SingleBenchmarkRunOutput:
     BT = input.x
     H = input.extra_benchmark_config["H"]
     V = input.extra_benchmark_config["V"]
     dtype = input.extra_benchmark_config["dtype"]
     provider = input.kernel_provider
-    
+
     device = "cuda"
     torch_lm_head_ce = TorchLMHeadCE(H=H, V=V, dtype=dtype).to(device)
     liger_lm_head_ce = LigerLMHeadCE(H=H, V=V, dtype=dtype).to(device)
@@ -90,14 +93,16 @@ def bench_memory_fused_linear_cross_entropy(input: SingleBenchmarkRunInput) -> S
 # #############################################################################
 
 
-def bench_speed_fused_linear_cross_entropy(input: SingleBenchmarkRunInput) -> SingleBenchmarkRunOutput:
+def bench_speed_fused_linear_cross_entropy(
+    input: SingleBenchmarkRunInput,
+) -> SingleBenchmarkRunOutput:
     BT = input.x
     H = input.extra_benchmark_config["H"]
     V = input.extra_benchmark_config["V"]
     dtype = input.extra_benchmark_config["dtype"]
     provider = input.kernel_provider
     mode = input.kernel_operation_mode
-    
+
     device = "cuda"
 
     torch_lm_head_ce = TorchLMHeadCE(H=H, V=V, dtype=dtype).to(device)
@@ -121,7 +126,7 @@ def bench_speed_fused_linear_cross_entropy(input: SingleBenchmarkRunInput) -> Si
             lambda: y.backward(retain_graph=True),
             grad_to_none=[_input],
             rep=100,
-            return_mode="mean"
+            return_mode="mean",
         )
     elif mode == "full":
 
@@ -144,7 +149,9 @@ if __name__ == "__main__":
         "x_label": "B x T",
         "x_values": [2**i for i in range(12, 16)],
         "kernel_providers": ["liger", "huggingface"],
-        "extra_benchmark_configs": [{"H": 4096, "V": 128256, "mode": "forward", "dtype": torch.bfloat16}],
+        "extra_benchmark_configs": [
+            {"H": 4096, "V": 128256, "mode": "forward", "dtype": torch.bfloat16}
+        ],
         "overwrite": args.overwrite,
     }
 

@@ -1,6 +1,6 @@
 import torch
-import triton
 import torch.nn as nn
+import triton
 from utils import (
     SingleBenchmarkRunInput,
     SingleBenchmarkRunOutput,
@@ -8,6 +8,7 @@ from utils import (
     parse_benchmark_script_args,
     run_benchmarks,
 )
+
 from liger_kernel.transformers.rms_norm import LigerRMSNorm
 
 
@@ -66,7 +67,7 @@ def bench_speed_rms_norm(input: SingleBenchmarkRunInput) -> SingleBenchmarkRunOu
             lambda: y.backward(dy, retain_graph=True),
             grad_to_none=[x],
             rep=500,
-            return_mode="mean"
+            return_mode="mean",
         )
     elif mode == "full":
 
@@ -86,7 +87,6 @@ def bench_speed_rms_norm(input: SingleBenchmarkRunInput) -> SingleBenchmarkRunOu
 def bench_memory_rms_norm(input: SingleBenchmarkRunInput) -> SingleBenchmarkRunOutput:
     N = input.x
     provider = input.kernel_provider
-    mode = input.kernel_operation_mode
 
     extra_benchmark_config = input.extra_benchmark_config
     M = extra_benchmark_config["M"]

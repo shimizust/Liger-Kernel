@@ -1,17 +1,15 @@
 import torch
 import triton
-from torch.nn import CrossEntropyLoss
+from transformers.models.llama.modeling_llama import (
+    LlamaRotaryEmbedding,
+    apply_rotary_pos_emb,
+)
 from utils import (
     SingleBenchmarkRunInput,
     SingleBenchmarkRunOutput,
     _test_memory,
     parse_benchmark_script_args,
     run_benchmarks,
-)
-
-from transformers.models.llama.modeling_llama import (
-    LlamaRotaryEmbedding,
-    apply_rotary_pos_emb,
 )
 
 from liger_kernel.transformers.rope import liger_rotary_pos_emb
@@ -27,9 +25,17 @@ def bench_speed_rope(input: SingleBenchmarkRunInput) -> SingleBenchmarkRunOutput
     dtype = extra_benchmark_config["dtype"]
 
     # x can be either hidden_size or seq_len
-    hidden_size = extra_benchmark_config["hidden_size"] if "hidden_size" in extra_benchmark_config else input.x
-    seq_len = extra_benchmark_config["seq_len"] if "seq_len" in extra_benchmark_config else input.x
-    
+    hidden_size = (
+        extra_benchmark_config["hidden_size"]
+        if "hidden_size" in extra_benchmark_config
+        else input.x
+    )
+    seq_len = (
+        extra_benchmark_config["seq_len"]
+        if "seq_len" in extra_benchmark_config
+        else input.x
+    )
+
     head_dim = hidden_size // num_q_heads
     rotary_emb = LlamaRotaryEmbedding(head_dim, device="cuda")
     q = torch.randn(
@@ -60,7 +66,10 @@ def bench_speed_rope(input: SingleBenchmarkRunInput) -> SingleBenchmarkRunOutput
 
     if mode == "forward":
         time_mean = triton.testing.do_bench(
-            fwd, grad_to_none=[q, k], rep=400, return_mode="mean",
+            fwd,
+            grad_to_none=[q, k],
+            rep=400,
+            return_mode="mean",
         )
     elif mode == "backward":
         q_out, k_out = fwd()
@@ -79,7 +88,10 @@ def bench_speed_rope(input: SingleBenchmarkRunInput) -> SingleBenchmarkRunOutput
             torch.autograd.grad((q_out, k_out), (q, k), (dq, dk), allow_unused=True)
 
         time_mean = triton.testing.do_bench(
-            full, grad_to_none=[q, k], rep=400, return_mode="mean",
+            full,
+            grad_to_none=[q, k],
+            rep=400,
+            return_mode="mean",
         )
     return SingleBenchmarkRunOutput(
         y_mean=time_mean,
@@ -88,7 +100,6 @@ def bench_speed_rope(input: SingleBenchmarkRunInput) -> SingleBenchmarkRunOutput
 
 def bench_memory_rope(input: SingleBenchmarkRunInput) -> SingleBenchmarkRunOutput:
     provider = input.kernel_provider
-    mode = input.kernel_operation_mode
 
     extra_benchmark_config = input.extra_benchmark_config
     num_q_heads = extra_benchmark_config["num_q_heads"]
@@ -96,8 +107,16 @@ def bench_memory_rope(input: SingleBenchmarkRunInput) -> SingleBenchmarkRunOutpu
     dtype = extra_benchmark_config["dtype"]
 
     # x can be either hidden_size or seq_len
-    hidden_size = extra_benchmark_config["hidden_size"] if "hidden_size" in extra_benchmark_config else input.x
-    seq_len = extra_benchmark_config["seq_len"] if "seq_len" in extra_benchmark_config else input.x
+    hidden_size = (
+        extra_benchmark_config["hidden_size"]
+        if "hidden_size" in extra_benchmark_config
+        else input.x
+    )
+    seq_len = (
+        extra_benchmark_config["seq_len"]
+        if "seq_len" in extra_benchmark_config
+        else input.x
+    )
 
     head_dim = hidden_size // num_q_heads
     rotary_emb = LlamaRotaryEmbedding(head_dim, device="cuda")
@@ -144,7 +163,14 @@ if __name__ == "__main__":
         "x_label": "hidden size",
         "x_values": [32 * (2**i) for i in range(4, 10, 2)],
         "kernel_providers": ["liger", "huggingface"],
-        "extra_benchmark_configs": [{"dtype": torch.bfloat16, "seq_len": 2048, "num_q_heads": 32, "num_kv_heads": 8}],
+        "extra_benchmark_configs": [
+            {
+                "dtype": torch.bfloat16,
+                "seq_len": 2048,
+                "num_q_heads": 32,
+                "num_kv_heads": 8,
+            }
+        ],
         "overwrite": args.overwrite,
     }
     run_benchmarks(
@@ -152,14 +178,14 @@ if __name__ == "__main__":
         kernel_operation_modes=["forward", "backward", "full"],
         metric_name="speed",
         metric_unit="ms",
-        **common_configs_varying_hidden_size
+        **common_configs_varying_hidden_size,
     )
     run_benchmarks(
         bench_test_fn=bench_memory_rope,
         kernel_operation_modes=["full"],
         metric_name="memory",
         metric_unit="MB",
-        **common_configs_varying_hidden_size
+        **common_configs_varying_hidden_size,
     )
 
     common_configs_varying_seq_len = {
@@ -168,7 +194,14 @@ if __name__ == "__main__":
         "x_label": "sequence length",
         "x_values": [2**i for i in range(10, 15)],
         "kernel_providers": ["liger", "huggingface"],
-        "extra_benchmark_configs": [{"dtype": torch.bfloat16, "hidden_size": 8192, "num_q_heads": 32, "num_kv_heads": 8}],
+        "extra_benchmark_configs": [
+            {
+                "dtype": torch.bfloat16,
+                "hidden_size": 8192,
+                "num_q_heads": 32,
+                "num_kv_heads": 8,
+            }
+        ],
         "overwrite": args.overwrite,
     }
     run_benchmarks(
@@ -176,12 +209,12 @@ if __name__ == "__main__":
         kernel_operation_modes=["forward", "backward", "full"],
         metric_name="speed",
         metric_unit="ms",
-        **common_configs_varying_seq_len
+        **common_configs_varying_seq_len,
     )
     run_benchmarks(
         bench_test_fn=bench_memory_rope,
         kernel_operation_modes=["full"],
         metric_name="memory",
         metric_unit="MB",
-        **common_configs_varying_seq_len
+        **common_configs_varying_seq_len,
     )
