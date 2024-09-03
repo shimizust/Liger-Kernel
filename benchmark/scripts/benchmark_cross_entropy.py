@@ -88,7 +88,7 @@ def bench_speed_cross_entropy(
     )
 
 
-f __name__ == "__main__":
+if __name__ == "__main__":
     args = parse_benchmark_script_args()
 
     common_configs = {
