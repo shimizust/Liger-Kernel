@@ -1,0 +1,1 @@
+{'loss': 8.2863, 'grad_norm': 601.5663452148438, 'learning_rate': 3e-06, 'epoch': 0.02, 'num_input_tokens_seen': 340992}
