@@ -8,9 +8,7 @@ from trl import DataCollatorForCompletionOnlyLM, SFTTrainer
 
 from liger_kernel.transformers import (
     AutoLigerKernelForCausalLM,
-    apply_liger_kernel_to_llama,
 )
-
 
 @dataclass
 class CustomArguments:
@@ -18,12 +16,6 @@ class CustomArguments:
     dataset: str = "tatsu-lab/alpaca"
     max_seq_length: int = 512
     use_liger: bool = False
-    bos_token: str = "<|begin_of_text|>"
-
-bos_token = "<s>"
-
-def formatting_prompts_func(example):
-    return [text.replace("### Response:", bos_token) for text in example["text"]]
 
 
 def train():
@@ -37,6 +29,10 @@ def train():
         truncation_side="left",
     )
     tokenizer.pad_token = tokenizer.eos_token
+
+    def formatting_prompts_func(example):
+        return [text.replace("### Response:", tokenizer.bos_token) for text in example["text"]]
+
 
     dataset = datasets.load_dataset(custom_args.dataset)["train"].train_test_split(
         test_size=0.1
@@ -65,15 +61,6 @@ def train():
             use_cache=False,
             torch_dtype=torch.bfloat16,
         )
-    # if custom_args.use_liger:
-    #     apply_liger_kernel_to_llama()
-    
-    # model = transformers.AutoModelForCausalLM.from_pretrained(
-    #     custom_args.model_name,
-    #     trust_remote_code=True,
-    #     use_cache=False,
-    #     torch_dtype=torch.bfloat16,
-    # )
 
     trainer = SFTTrainer(
         model=model,
