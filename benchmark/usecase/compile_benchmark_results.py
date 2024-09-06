@@ -97,12 +97,6 @@ for model, providers in all_data.items():
                         "avg_tokens_per_second_std": avg_tokens_per_second_std
                     })
 
-# Write the compiled data to a CSV file
-# with open(output_file, "w") as file:
-#     file.write("model,batch_size,total_peak_memory_allocated_MB_mean,total_peak_memory_allocated_MB_std,avg_tokens_per_second_mean,avg_tokens_per_second_std\n")
-#     for entry in summary_stats:
-#         file.write(f"{entry['model']},{entry['provider']},{entry['batch_size']},{entry['total_peak_memory_allocated_MB_mean']},{entry['total_peak_memory_allocated_MB_std']},{entry['avg_tokens_per_second_mean']},{entry['avg_tokens_per_second_std']}\n")
-
 with open(output_file, mode="w", newline='') as file:
     writer = csv.DictWriter(file, fieldnames=[
         "model", "provider", "batch_size", "total_peak_memory_allocated_MB_mean", 

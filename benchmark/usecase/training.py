@@ -17,6 +17,10 @@ class CustomArguments:
     max_seq_length: int = 512
     use_liger: bool = False
 
+bos_token = "<s>"
+def formatting_prompts_func(example):
+        return [text.replace("### Response:", bos_token) for text in example["text"]]
+
 
 def train():
     parser = transformers.HfArgumentParser(
@@ -29,10 +33,6 @@ def train():
         truncation_side="left",
     )
     tokenizer.pad_token = tokenizer.eos_token
-
-    def formatting_prompts_func(example):
-        return [text.replace("### Response:", tokenizer.bos_token) for text in example["text"]]
-
 
     dataset = datasets.load_dataset(custom_args.dataset)["train"].train_test_split(
         test_size=0.1

@@ -7,6 +7,7 @@ MAX_STEPS=20
 DATASET_PATH="/shared/public/data/tatsu-lab"
 
 SCRIPT_DIR="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)"
+mkdir -p "${SCRIPT_DIR}/results"
 
 for USE_LIGER in "${USE_LIGER_VALUES[@]}"; do
     for BATCH_SIZE in "${BATCH_SIZE_VALUES[@]}"; do

@@ -51,11 +51,11 @@ Add a benchmarking script under `benchmark/scripts` using the naming convention 
 ## Run kernel benchmarks
 The `/benchmark` directory contains benchmarking scripts for the individual kernels, demonstrating differences in speed and memory usage between using Liger and HuggingFace module implementations.
 
-1. Run `make run-benchmarks` to run all benchmarking scripts and append data to `benchmark/data/all_benchmark_data.csv`.
+1. Run `make run-benchmarks` to run all benchmarking scripts and append data to `benchmark/kernel/data/all_benchmark_data.csv`.
    - Existing entries that are the same (based on `kernel_name`, `kernel_provider`, `kernel_operation_mode`, `metric_name`, `x_name`, `x_value`, `extra_benchmark_config_str`, and `gpu_name`) will not be overwritten.
 2. Run `make run-benchmarks OVERWRITE=1` to overwrite any existing entries that have the same configuration.
-3. Run `python benchmark/scripts/benchmark_{kernel_name}.py` to run an individual benchmark.
-4. You can use the `benchmark/benchmarks_visualizer.ipynb` notebook as an example to load the CSV and perform data visualization/analysis.
+3. Run `python benchmark/kernel/scripts/benchmark_{kernel_name}.py` to run an individual benchmark.
+4. You can use the `benchmark/kernel/benchmarks_visualizer.ipynb` notebook as an example to load the CSV and perform data visualization/analysis.
 
 ## Submit PR
 Fork the repo, copy and paste the successful test logs in the PR and submit the PR followed by the PR template (**[example PR](https://github.com/linkedin/Liger-Kernel/pull/21)**).
