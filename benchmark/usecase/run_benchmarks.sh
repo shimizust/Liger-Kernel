@@ -1,10 +1,10 @@
 MODEL_TYPE="mistral"
-MODEL_PATH="/shared/public/models/Mistral-7B"
+MODEL_PATH="mistralai/Mistral-7B-v0.1"
 USE_LIGER_VALUES=("True" "False")
 BATCH_SIZE_VALUES=(64 128 192)
 NUM_REP=5
 MAX_STEPS=20
-DATASET_PATH="/shared/public/data/tatsu-lab"
+DATASET_PATH="tatsu-lab/alpaca"
 
 SCRIPT_DIR="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)"
 mkdir -p "${SCRIPT_DIR}/results"
