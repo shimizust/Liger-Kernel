@@ -19,7 +19,7 @@ tokenizer = AutoTokenizer.from_pretrained(
 )
 tokenizer.pad_token = tokenizer.eos_token
 
-train_dataset = load_dataset("trl-lib/tldr-preference", split="train")
+train_dataset = load_dataset("trl-lib/tldr-preference", split="train").select(range(10000))
 
 training_args = ORPOConfig(
     output_dir="Llama3.2_1B_Instruct",
@@ -27,9 +27,12 @@ training_args = ORPOConfig(
     max_length=128,
     per_device_train_batch_size=32,
     max_steps=100,
-    save_strategy="no",
+    save_strategy="steps",
+    save_steps=50,
+    save_total_limit=1,
+    logging_steps=10,
 )
 
-trainer = LigerORPOTrainer(model=model, args=training_args, tokenizer=tokenizer, train_dataset=train_dataset)
+trainer = LigerORPOTrainer(model=model, args=training_args, processing_class=tokenizer, train_dataset=train_dataset)
 
 trainer.train()
