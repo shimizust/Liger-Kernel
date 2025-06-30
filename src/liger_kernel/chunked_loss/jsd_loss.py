@@ -11,10 +11,12 @@ class LigerFusedLinearJSDFunction(LigerFusedLinearDistillationBase):
     def distillation_loss_fn(student_logits, teacher_logits, beta=0.5):
         """
         Compute JSD loss (Jensen-Shannon Divergence Loss).
+
         Args:
             student_logits (torch.Tensor): Logits of student tokens. Shape: (batch_size * seq_len,).
             teacher_logits (torch.Tensor): Logits of teacher tokens. Shape: (batch_size * seq_len,).
             beta (float): Coefficient beta of generalized JSD in the interval [0, 1]. Default: `0.5`.
+
         Returns:
             torch.Tensor: Jensen-Shannon Divergence loss
         """
@@ -59,6 +61,7 @@ class LigerFusedLinearJSDFunction(LigerFusedLinearDistillationBase):
     ):
         """
         Fused linear layer with JSD distillation loss.
+
         Args:
             student_input (torch.Tensor): Student input tensor. Shape: (batch_size * seq_len, hidden_size_student)
             student_weight (torch.Tensor): Student weight tensor. Shape: (vocab_size, hidden_size_student)
@@ -72,6 +75,7 @@ class LigerFusedLinearJSDFunction(LigerFusedLinearDistillationBase):
             temperature (float): Temperature for softening/sharpening distributions
             compiled (bool): Whether to use torch compile
             chunk_size (int): Size of chunks for processing.
+            
         Returns:
             torch.Tensor: Computed loss
         """

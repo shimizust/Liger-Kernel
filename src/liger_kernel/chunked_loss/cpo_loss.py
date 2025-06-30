@@ -11,6 +11,7 @@ class LigerFusedLinearCPOFunction(LigerFusedLinearPreferenceBase):
         Paper: https://arxiv.org/pdf/2401.08417
 
         Formula:
+        ```
         L(π_θ; U) = -E_(x,y_w,y_l)~D[log σ(β log π_θ(y_w|x) - β log π_θ(y_l|x))]
 
         Where:
@@ -21,6 +22,7 @@ class LigerFusedLinearCPOFunction(LigerFusedLinearPreferenceBase):
         - β: Temperature parameter
         - E: Expected value over the dataset D
         - D: Dataset of preferences
+        ```
 
         Args:
             chosen_logps (torch.Tensor): Avg log probabilities of chosen tokens. Shape: (batch_size,).
@@ -58,6 +60,7 @@ class LigerFusedLinearCPOFunction(LigerFusedLinearPreferenceBase):
     ):
         """
         Fused linear layer with CPO loss.
+
         Args:
             _input (torch.Tensor): Input tensor. Shape: (batch_size * seq_len, hidden_size)
             weight (torch.Tensor): Weight tensor. Shape: (vocab_size, hidden_size)
@@ -71,6 +74,7 @@ class LigerFusedLinearCPOFunction(LigerFusedLinearPreferenceBase):
             compiled (bool): Whether to use torch compile
             average_log_prob (bool): Whether to average the log probability per non-masked token
             chunk_size (int): Size of chunks for processing.
+            
         Returns:
             torch.Tensor: Computed loss
         """

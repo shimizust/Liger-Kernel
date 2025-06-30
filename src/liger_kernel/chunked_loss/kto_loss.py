@@ -25,6 +25,7 @@ class LigerFusedLinearKTOFunction(LigerFusedLinearUnpairedPreferenceBase):
         human decision-making patterns.
 
         Formula:
+        ```
         When y is chosen:
         L_KTO = 1 - σ(β * (log[π(x)/π₀(x)] - KL(π||π₀)_y))
         When y is rejected:
@@ -36,6 +37,7 @@ class LigerFusedLinearKTOFunction(LigerFusedLinearUnpairedPreferenceBase):
         - π(x): Policy (current model)
         - π₀(x): Reference policy (reference model)
         - KL(π||π₀)_y: KL divergence estimated using the rejected response y
+        ```
 
         The loss encourages the model to:
         1. Assign higher probability to chosen responses
@@ -90,6 +92,7 @@ class LigerFusedLinearKTOFunction(LigerFusedLinearUnpairedPreferenceBase):
     ):
         """
         Fused linear layer with KTO loss.
+        
         Args:
             _input (torch.Tensor): Input tensor. Shape: (batch_size * seq_len, hidden_size)
             weight (torch.Tensor): Weight tensor. Shape: (vocab_size, hidden_size)

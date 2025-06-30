@@ -19,6 +19,7 @@ class LigerFusedLinearDPOFunction(LigerFusedLinearPreferenceBase):
         Paper: https://arxiv.org/pdf/2305.18290
 
         Formula:
+        ```
         L_DPO = -E[ log_sigmoid( β * (log(π(y_w|x)/π_ref(y_w|x)) - log(π(y_l|x)/π_ref(y_l|x))) ) ]
 
         Where:
@@ -28,6 +29,7 @@ class LigerFusedLinearDPOFunction(LigerFusedLinearPreferenceBase):
         - y_l: Rejected sequence
         - β: Weight for the direct preference loss
         - E: Expected value over the dataset
+        ```
 
         Args:
             chosen_logps: Log probabilities of chosen tokens (batch_size,)
@@ -117,6 +119,7 @@ class LigerFusedLinearDPOFunction(LigerFusedLinearPreferenceBase):
     ):
         """
         Fused linear layer with DPO loss.
+
         Args:
             _input (torch.Tensor): Input tensor. Shape: (batch_size * seq_len, hidden_size)
             weight (torch.Tensor): Weight tensor. Shape: (vocab_size, hidden_size)
@@ -132,6 +135,7 @@ class LigerFusedLinearDPOFunction(LigerFusedLinearPreferenceBase):
             use_ref_model (bool): Whether to use a reference model
             average_log_prob (bool): Whether to average the log probability per non-masked token
             chunk_size (int): Size of chunks for processing.
+            
         Returns:
             torch.Tensor: Computed loss
         """

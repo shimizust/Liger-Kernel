@@ -1,0 +1,1 @@
+::: liger_kernel.transformers.auto_model

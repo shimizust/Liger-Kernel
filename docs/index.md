@@ -5,35 +5,39 @@
 
 <table style="width: 100%; text-align: center; border-collapse: collapse;">
     <tr>
-        <th style="padding: 10px;" colspan="2">Stable</th>
-        <th style="padding: 10px;" colspan="2">Nightly</th>
-        <th style="padding: 10px;">Discord</th>
+        <th style="padding: 10px;" colspan="1">Stable</th>
+        <th style="padding: 10px;" colspan="1">Nightly</th>
+        <th style="padding: 10px;">Slack</th>
         <th style="padding: 10px;">Build</th>
     </tr>
     <tr>
         <td style="padding: 10px;">
-            <a href="https://pepy.tech/project/liger-kernel">
-                <img src="https://static.pepy.tech/badge/liger-kernel" alt="Downloads (Stable)">
-            </a>
+            <div style="display: block;">
+                <a href="https://pepy.tech/project/liger-kernel">
+                    <img src="https://static.pepy.tech/badge/liger-kernel" alt="Downloads (Stable)">
+                </a>
+            </div>
+            <div style="display: block;">
+                <a href="https://pypi.org/project/liger-kernel">
+                    <img alt="PyPI - Version" src="https://img.shields.io/pypi/v/liger-kernel?color=green">
+                </a>
+            </div>
         </td>
         <td style="padding: 10px;">
-            <a href="https://pypi.org/project/liger-kernel">
-                <img alt="PyPI - Version" src="https://img.shields.io/pypi/v/liger-kernel?color=green">
-            </a>
+            <div style="display: block;">
+                <a href="https://pepy.tech/project/liger-kernel-nightly">
+                    <img src="https://static.pepy.tech/badge/liger-kernel-nightly" alt="Downloads (Nightly)">
+                </a>
+            </div>
+            <div style="display: block;">
+                <a href="https://pypi.org/project/liger-kernel-nightly">
+                    <img alt="PyPI - Version" src="https://img.shields.io/pypi/v/liger-kernel-nightly?color=green">
+                </a>
+            </div>
         </td>
         <td style="padding: 10px;">
-            <a href="https://pepy.tech/project/liger-kernel-nightly">
-                <img src="https://static.pepy.tech/badge/liger-kernel-nightly" alt="Downloads (Nightly)">
-            </a>
-        </td>
-        <td style="padding: 10px;">
-            <a href="https://pypi.org/project/liger-kernel-nightly">
-                <img alt="PyPI - Version" src="https://img.shields.io/pypi/v/liger-kernel-nightly?color=green">
-            </a>
-        </td>
-        <td style="padding: 10px;">
-            <a href="https://discord.gg/gpumode">
-                <img src="https://dcbadge.vercel.app/api/server/gpumode?style=flat" alt="Join Our Discord">
+            <a href="https://join.slack.com/t/ligerkernel/shared_invite/zt-38amujbrb-MEeFtoAO0PP0fniWmTcm9Q">
+                <img src="https://img.shields.io/badge/Slack-Join%20Liger%20Kernel-blue?logo=slack" alt="Join Liger Kernel Slack">
             </a>
         </td>
         <td style="padding: 10px;">
@@ -58,7 +62,7 @@
 
 **Liger Kernel** is a collection of Triton kernels designed specifically for LLM training. It can effectively increase multi-GPU **training throughput by 20%** and reduces **memory usage by 60%**. We have implemented **Hugging Face Compatible** `RMSNorm`, `RoPE`, `SwiGLU`, `CrossEntropy`, `FusedLinearCrossEntropy`, and more to come. The kernel works out of the box with [Flash Attention](https://github.com/Dao-AILab/flash-attention), [PyTorch FSDP](https://pytorch.org/tutorials/intermediate/FSDP_tutorial.html), and [Microsoft DeepSpeed](https://github.com/microsoft/DeepSpeed). We welcome contributions from the community to gather the best kernels for LLM training.
 
-We've also added optimized Post-Training kernels that deliver **up to 80% memory savings** for alignment and distillation tasks. We support losses like DPO, CPO, ORPO, SimPO, JSD, and many more. Check out [how we optimize the memory](https://x.com/hsu_byron/status/1866577403918917655).
+We've also added optimized Post-Training kernels that deliver **up to 80% memory savings** for alignment and distillation tasks. We support losses like GRPO, DPO, CPO, ORPO, SimPO, KTO, JSD, and many more. Check out [how we optimize the memory](https://x.com/hsu_byron/status/1866577403918917655).
 
 ## Supercharge Your Model with Liger Kernel
 
@@ -79,10 +83,10 @@ With one line of code, Liger Kernel can increase throughput by more than 20% and
     <img src="https://raw.githubusercontent.com/linkedin/Liger-Kernel/main/docs/images/post-training.png" width="50%" alt="Post Training">
 </p>
 
-We provide optimized post training kernels like DPO, ORPO, SimPO, and more which can reduce memory usage by up to 80%. You can easily use them as python modules.
+We provide optimized post training kernels like GRPO, DPO, ORPO, SimPO, and more which can reduce memory usage by up to 80%. You can easily use them as python modules.
 
 ```python
-from liger_kernel.chunked_loss import LigerFusedLinearDPOLoss
+from liger_kernel.chunked_loss import LigerFusedLinearORPOLoss
 orpo_loss = LigerFusedLinearORPOLoss()
 y = orpo_loss(lm_head.weight, x, target)
 ```
@@ -94,7 +98,7 @@ y = orpo_loss(lm_head.weight, x, target)
 - **Exact:** Computation is exact—no approximations! Both forward and backward passes are implemented with rigorous unit tests and undergo convergence testing against training runs without Liger Kernel to ensure accuracy.
 - **Lightweight:** Liger Kernel has minimal dependencies, requiring only Torch and Triton—no extra libraries needed! Say goodbye to dependency headaches!
 - **Multi-GPU supported:** Compatible with multi-GPU setups (PyTorch FSDP, DeepSpeed, DDP, etc.).
-- **Trainer Framework Integration**: [Axolotl](https://github.com/axolotl-ai-cloud/axolotl), [LLaMa-Factory](https://github.com/hiyouga/LLaMA-Factory), [SFTTrainer](https://github.com/huggingface/trl/releases/tag/v0.10.1), [Hugging Face Trainer](https://github.com/huggingface/transformers/pull/32860), [SWIFT](https://github.com/modelscope/ms-swift)
+- **Trainer Framework Integration**: [Axolotl](https://github.com/axolotl-ai-cloud/axolotl), [LLaMa-Factory](https://github.com/hiyouga/LLaMA-Factory), [SFTTrainer](https://github.com/huggingface/trl/releases/tag/v0.10.1), [Hugging Face Trainer](https://github.com/huggingface/transformers/pull/32860), [SWIFT](https://github.com/modelscope/ms-swift), [oumi](https://oumi.ai/)
 
 ### Installation
 
@@ -149,18 +153,20 @@ pip install -e ".[dev]"
 - [AMD](https://www.amd.com/en.html): Providing AMD GPUs for our AMD CI.
 - [Intel](https://www.intel.com/): Providing Intel GPUs for our Intel CI.
 - [Modal](https://modal.com/): Free 3000 credits from GPU MODE IRL for our NVIDIA CI.
+- [Glows.ai](https://glows.ai/): Providing NVIDIA GPU sponsorship for development and testing.
 - [EmbeddedLLM](https://embeddedllm.com/): Making Liger Kernel run fast and stable on AMD. 
 - [HuggingFace](https://huggingface.co/): Integrating Liger Kernel into Hugging Face Transformers and TRL.
 - [Lightning AI](https://lightning.ai/): Integrating Liger Kernel into Lightning Thunder.
 - [Axolotl](https://axolotl.ai/): Integrating Liger Kernel into Axolotl.
 - [Llama-Factory](https://github.com/hiyouga/LLaMA-Factory): Integrating Liger Kernel into Llama-Factory.
+- [oumi](https://oumi.ai/): Partnership and integration for efficient training workflows.
 
 
 !!! Note " Contact " 
 
     - For issues, create a Github ticket in this repository .
-    - For open discussion, join [our discord channel](https://discord.gg/gpumode) .
-    - For formal collaboration, send an email to byhsu@linkedin.com .
+    - For open discussion, join [our Liger Kernel Slack channel](https://join.slack.com/t/ligerkernel/shared_invite/zt-38amujbrb-MEeFtoAO0PP0fniWmTcm9Q) .
+    - For formal collaboration, send an email to yannchen@linkedin.com and sshimizu@linkedin.com .
 
 ### Cite this work
 

@@ -233,7 +233,7 @@ def apply_liger_kernel_to_llama(
         rms_norm (bool): Whether to apply Liger's RMSNorm. Default is True.
         swiglu (bool): Whether to apply Liger's SwiGLU MLP. Default is True.
         model (PreTrainedModel): The model instance to apply Liger kernels to, if the model has already been
-        loaded. Default is None.
+            loaded. Default is None.
     """
 
     assert not (cross_entropy and fused_linear_cross_entropy), (
@@ -383,7 +383,7 @@ def apply_liger_kernel_to_llava(
         rms_norm (bool): Whether to apply Liger's RMSNorm. Default is True.
         swiglu (bool): Whether to apply Liger's SwiGLU MLP. Default is True.
         model (PreTrainedModel): The model instance to apply Liger kernels to, if the model has already been
-        loaded. Default is None.
+            loaded. Default is None.
     """
     assert not (cross_entropy and fused_linear_cross_entropy), (
         "cross_entropy and fused_linear_cross_entropy cannot both be True."

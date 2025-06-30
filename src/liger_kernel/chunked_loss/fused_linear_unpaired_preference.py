@@ -39,12 +39,14 @@ class LigerFusedLinearUnpairedPreferenceBase(torch.autograd.Function):
 
         The mental model is:
 
+        ```
         forward()
         ├── Loop over chunks
             └── compute_loss()
                 ├── chunk_forward()  # Compute logits and log probs
                 └── prefer_loss()    # Calculate preference loss
-
+        ```
+        
         Args:
             _input (torch.Tensor): Input tensor. Shape: (batch_size, seq_len, hidden_size).
             weight (torch.Tensor): Weight tensor. Shape: (vocab_size, hidden_size).

@@ -78,6 +78,7 @@ The implementation achieves significant speed improvements and memory savings co
 |---------------------------------|-------------------------------------------------------------|
 | Fused Linear CPO Loss           | `liger_kernel.chunked_loss.LigerFusedLinearCPOLoss`       |
 | Fused Linear DPO Loss           | `liger_kernel.chunked_loss.LigerFusedLinearDPOLoss`       |
+| Fused Linear KTO Loss           | `liger_kernel.chunked_loss.LigerFusedLinearKTOLoss`       |
 | Fused Linear ORPO Loss          | `liger_kernel.chunked_loss.LigerFusedLinearORPOLoss`      |
 | Fused Linear SimPO Loss         | `liger_kernel.chunked_loss.LigerFusedLinearSimPOLoss`     |
 
@@ -88,6 +89,7 @@ The implementation achieves significant speed improvements and memory savings co
 | KLDivergence                    | `liger_kernel.transformers.LigerKLDIVLoss`                  |
 | JSD                             | `liger_kernel.transformers.LigerJSD`                        |
 | Fused Linear JSD                  | `liger_kernel.transformers.LigerFusedLinearJSD`             |
+| TVD Loss                        | `liger_kernel.transformers.LigerTVDLoss`                    |
 
 ## Experimental Kernels
 

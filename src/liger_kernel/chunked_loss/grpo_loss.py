@@ -118,6 +118,7 @@ class LigerFusedLinearGRPOFunction(LigerFusedLinearPPOBase):
     ):
         """
         Fused linear layer with GRPO loss.
+
         Args:
             _input (torch.Tensor): Input tensor. Shape: (batch_size * seq_len, hidden_size)
             weight (torch.Tensor): Weight tensor. Shape: (vocab_size, hidden_size)
@@ -136,6 +137,7 @@ class LigerFusedLinearGRPOFunction(LigerFusedLinearPPOBase):
             compiled (bool): Whether to use torch compile
             use_ref_model (bool): Whether to use a reference model
             chunk_size (int): Size of chunks for processing.
+            
         Returns:
             torch.Tensor: Computed loss
         """

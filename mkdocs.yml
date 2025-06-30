@@ -2,7 +2,23 @@ site_name: Liger-Kernel Docs
 site_url: https://linkedin.github.io/Liger-Kernel/
 site_author: LinkedIn
 site_description: Efficient Triton Kernels for LLM Training
-
+nav:
+  - Home: index.md
+  - Examples: examples.md
+  - Getting Started: getting-started.md
+  - High Level APIs: high-level-apis.md
+  - Low Level APIs: low-level-apis.md
+  - Contributing: contributing.md
+  - Acknowledgment: acknowledgement.md
+  - License: license.md
+  - API Reference:
+    - Overview: api/overview.md
+    - Transformers:
+        - Model Patching: api/transformers/model-patch.md
+        - Auto Model: api/transformers/auto-model.md
+        - Liger Kernel Modules: api/transformers/modules.md
+    - Chunked Loss: api/chunked_loss.md
+    - Triton Ops: api/triton-ops.md
 theme:
   name: material
   font:
@@ -30,15 +46,25 @@ theme:
       primary: blue
       accent: deep purple
 
-nav:
-  - Home: index.md
-  - Examples: Examples.md
-  - Getting Started: Getting-Started.md
-  - High Level APIs: High-Level-APIs.md
-  - Low Level APIs: Low-Level-APIs.md
-  - Contributing: contributing.md
-  - Acknowledgment: acknowledgement.md
-  - License: license.md
+plugins:
+  - search
+  - mkdocstrings:
+      default_handler: python
+      handlers:
+        python:
+          paths: [src]
+          options:
+            show_source: false
+            show_root_heading: true
+            show_category_heading: true
+            show_signature_annotations: true
+            annotations_path: full
+            show_bases: true
+            show_submodules: true
+            heading_level: 2
+            members_order: source
+            docstring_style: google
+            
 
 markdown_extensions:
   - attr_list

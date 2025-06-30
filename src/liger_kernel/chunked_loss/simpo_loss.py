@@ -18,6 +18,7 @@ class LigerFusedLinearSimPOFunction(LigerFusedLinearPreferenceBase):
         Paper: https://arxiv.org/pdf/2405.14734
 
         Formula:
+        ```
         L_SimPO(π_θ) = -E [log σ(β/|y_w| log π_θ(y_w|x) - β/|y_l| log π_θ(y_l|x) - γ)]
 
         Where:
@@ -28,6 +29,7 @@ class LigerFusedLinearSimPOFunction(LigerFusedLinearPreferenceBase):
         - σ: Sigmoid function
         - β: beta weight
         - γ: gemma margin term
+        ```
 
         Args:
             chosen_logps (torch.Tensor): Avg log probabilities of chosen tokens. Shape: (batch_size,).
@@ -66,6 +68,7 @@ class LigerFusedLinearSimPOFunction(LigerFusedLinearPreferenceBase):
     ):
         """
         Fused linear layer with SimPO loss.
+        
         Args:
             _input (torch.Tensor): Input tensor. Shape: (batch_size * seq_len, hidden_size)
             weight (torch.Tensor): Weight tensor. Shape: (vocab_size, hidden_size)

@@ -94,7 +94,25 @@ The `/benchmark` directory contains benchmarking scripts for the individual kern
 3. Run `python benchmark/scripts/benchmark_{kernel_name}.py` to run an individual benchmark.
 4. You can use the `benchmark/benchmarks_visualizer.py` script to generate visualizations from the CSV, these are then saved to the `benchmark/visualizations` directory (note: this directory is not tracked by git).
 
+## Documentation
+
+We use GitHub Pages to host the detailed documentation. Documentation content is located in the `/docs` directory, with the repo's `README.md` file serving as an overview page and entry point to the detailed docs.
+
+To preview the documentation locally, run the following commands:
+
+1. `pip install mkdocs mkdocs-material`
+2. `mkdocs serve`
+3. Open `http://127.0.0.1:8000/` in your browser
+4. Changes to `.md` files in the `/docs` directory will automatically reload the page.
+
+### Benchmarks Visualizer [Work-in-progress]
+
+We currently run benchmarks on a weekly basis as part of our CI pipeline to help ensure there are no regressions. The results are pushed to the `gh-pages` branch and are available at [https://linkedin.github.io/Liger-Kernel/benchmarks](https://linkedin.github.io/Liger-Kernel/benchmarks/).
+
+To update the benchmarks visualization page, you need to checkout the `gh-pages` branch and update code under `benchmarks/` directory.
+
 ## Submit PR
+
 Fork the repo, copy and paste the successful test logs in the PR and submit the PR followed by the PR template (**[example PR](https://github.com/linkedin/Liger-Kernel/pull/21)**).
 
 !!! Warning "Notice"

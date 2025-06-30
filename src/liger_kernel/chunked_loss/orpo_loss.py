@@ -11,6 +11,7 @@ class LigerFusedLinearORPOFunction(LigerFusedLinearPreferenceBase):
         Paper: https://arxiv.org/pdf/2403.07691
 
         Formula:
+        ```
         Compute odds-ratio loss: L_OR = -log(σ(log(odds_θ(y_w|x) / odds_θ(y_l|x))))
         where odds_θ(y|x) = P_θ(y|x) / (1 - P_θ(y|x))
 
@@ -21,6 +22,7 @@ class LigerFusedLinearORPOFunction(LigerFusedLinearPreferenceBase):
         - σ: Sigmoid function
         - β: Weight for the odds ratio loss
         - odds_θ: Odds function for the policy
+        ```
 
         Args:
             chosen_logps (torch.Tensor): Avg log probabilities of chosen tokens. Shape: (batch_size,).
@@ -59,6 +61,7 @@ class LigerFusedLinearORPOFunction(LigerFusedLinearPreferenceBase):
     ):
         """
         Fused linear layer with ORPO loss.
+        
         Args:
             _input (torch.Tensor): Input tensor. Shape: (batch_size * seq_len, hidden_size)
             weight (torch.Tensor): Weight tensor. Shape: (vocab_size, hidden_size)
