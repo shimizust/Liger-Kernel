@@ -45,6 +45,17 @@ class LigerRMSNorm(nn.Module):
 
 
 class LigerRMSNormForGemma(LigerRMSNorm):
+    """RMSNorm implementation optimized for Gemma models.
+    
+    Args:
+        hidden_size (int): The size of the hidden dimension.
+        eps (float): A small value added to the denominator for numerical stability. Default: 1e-6.
+        offset (float): Offset value for Gemma models. Default: 1.0.
+        casting_mode (str): Precision casting mode. Default: "gemma".
+        init_fn (str): Weight initialization function. Default: "zeros".
+        in_place (bool): Whether to perform operations in-place. Default: True.
+        row_mode (str, optional): Row processing mode. Default: None.
+    """
     def __init__(
         self, hidden_size, eps=1e-6, offset=1.0, casting_mode="gemma", init_fn="zeros", in_place=True, row_mode=None
     ):
@@ -52,6 +63,17 @@ class LigerRMSNormForGemma(LigerRMSNorm):
 
 
 class LigerRMSNormForGemma2(LigerRMSNorm):
+    """RMSNorm implementation optimized for Gemma2 models.
+    
+    Args:
+        hidden_size (int): The size of the hidden dimension.
+        eps (float): A small value added to the denominator for numerical stability. Default: 1e-6.
+        offset (float): Offset value for Gemma models. Default: 1.0.
+        casting_mode (str): Precision casting mode. Default: "gemma".
+        init_fn (str): Weight initialization function. Default: "zeros".
+        in_place (bool): Whether to perform operations in-place. Default: False.
+        row_mode (str, optional): Row processing mode. Default: None.
+    """
     def __init__(
         self, hidden_size, eps=1e-6, offset=1.0, casting_mode="gemma", init_fn="zeros", in_place=False, row_mode=None
     ):
@@ -59,13 +81,32 @@ class LigerRMSNormForGemma2(LigerRMSNorm):
 
 
 class LigerRMSNormForGemma3(LigerRMSNorm):
-    """Gemma3RMSNorm has a dim argument not hidden_size used in q_norm and k_norm."""
-
+    """RMSNorm implementation optimized for Gemma3 models.
+    
+    Args:
+        dim (int): The dimension size (replaces hidden_size for Gemma3 compatibility).
+        eps (float): A small value added to the denominator for numerical stability. Default: 1e-6.
+        offset (float): Offset value for Gemma models. Default: 1.0.
+        casting_mode (str): Precision casting mode. Default: "gemma".
+        init_fn (str): Weight initialization function. Default: "zeros".
+        in_place (bool): Whether to perform operations in-place. Default: False.
+    """
     def __init__(self, dim, eps=0.000001, offset=1.0, casting_mode="gemma", init_fn="zeros", in_place=False):
         super().__init__(dim, eps, offset, casting_mode, init_fn, in_place)
 
 
 class LigerRMSNormForOlmo2(LigerRMSNorm):
+    """RMSNorm implementation optimized for OLMo2 models.
+    
+    Args:
+        hidden_size (int): The size of the hidden dimension.
+        eps (float): A small value added to the denominator for numerical stability. Default: 1e-6.
+        offset (float): Offset value for OLMo2 models. Default: 0.0.
+        casting_mode (str): Precision casting mode. Default: "llama".
+        init_fn (str): Weight initialization function. Default: "ones".
+        in_place (bool): Whether to perform operations in-place. Default: False.
+        row_mode (str, optional): Row processing mode. Default: None.
+    """
     def __init__(
         self, hidden_size, eps=1e-6, offset=0.0, casting_mode="llama", init_fn="ones", in_place=False, row_mode=None
     ):
@@ -73,6 +114,17 @@ class LigerRMSNormForOlmo2(LigerRMSNorm):
 
 
 class LigerRMSNormForGlm4(LigerRMSNorm):
+    """RMSNorm implementation optimized for GLM-4 models.
+    
+    Args:
+        hidden_size (int): The size of the hidden dimension.
+        eps (float): A small value added to the denominator for numerical stability. Default: 1e-6.
+        offset (float): Offset value for GLM-4 models. Default: 0.0.
+        casting_mode (str): Precision casting mode. Default: "llama".
+        init_fn (str): Weight initialization function. Default: "ones".
+        in_place (bool): Whether to perform operations in-place. Default: False.
+        row_mode (str, optional): Row processing mode. Default: None.
+    """
     def __init__(
         self, hidden_size, eps=1e-6, offset=0.0, casting_mode="llama", init_fn="ones", in_place=False, row_mode=None
     ):
