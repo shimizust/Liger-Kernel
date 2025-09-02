@@ -46,26 +46,6 @@ theme:
       primary: blue
       accent: deep purple
 
-plugins:
-  - search
-  - mkdocstrings:
-      default_handler: python
-      handlers:
-        python:
-          paths: [src]
-          options:
-            show_source: false
-            show_root_heading: true
-            show_category_heading: true
-            show_signature_annotations: true
-            annotations_path: full
-            show_bases: true
-            show_submodules: true
-            heading_level: 2
-            members_order: source
-            docstring_style: google
-            
-
 markdown_extensions:
   - attr_list
   - toc:
@@ -89,17 +69,26 @@ markdown_extensions:
 plugins:
   - search
   - mkdocstrings:
+      default_handler: python
       handlers:
         python:
-          paths: [src] 
+          paths: [src]
           options:
+            show_source: false
             show_root_heading: true
-            show_source: true
-            docstring_style: google  
+            show_category_heading: true
+            show_signature_annotations: true
+            annotations_path: full
+            show_bases: true
+            show_submodules: true
+            heading_level: 2
+            members_order: source
+            docstring_style: google
             docstring_section_style: table
-            heading_level: 3  
-            show_signature_annotations: false  # Hides type annotations to save space
-            separate_signature: true  # Separates signature from description
+            separate_signature: true
+            group_by_category: true
+            show_symbol_type_heading: true
+            show_symbol_type_toc: true
 
 
 # Repository

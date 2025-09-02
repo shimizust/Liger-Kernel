@@ -5,6 +5,17 @@ from liger_kernel.ops.rms_norm import LigerRMSNormFunction
 
 
 class LigerRMSNorm(nn.Module):
+    """Liger implementation of Root Mean Square Layer Normalization.
+    
+    Args:
+        hidden_size (int): The size of the hidden dimension.
+        eps (float): A small value added to the denominator for numerical stability. Default: 1e-6.
+        offset (float): Offset value applied during normalization. Default: 0.0.
+        casting_mode (str): Precision casting mode ("llama", "gemma", etc.). Default: "llama".
+        init_fn (str): Weight initialization function ("ones" or "zeros"). Default: "ones".
+        in_place (bool): Whether to perform operations in-place for memory efficiency. Default: True.
+        row_mode (str, optional): Row processing mode. Default: None.
+    """
     def __init__(
         self,
         hidden_size,
