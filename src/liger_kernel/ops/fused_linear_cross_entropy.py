@@ -270,28 +270,31 @@ class LigerFusedLinearCrossEntropyFunction(torch.autograd.Function):
         accum_dtype=None,
         use_token_scaling: bool = False,
     ):
-        """
-        Fusing the last linear layer with cross-entropy loss
-            Reference: https://github.com/mgmalek/efficient_cross_entropy
-
-        Handle the forward and backward pass of the final linear layer via cross-entropy loss by avoiding
-        the materialization of the large logits tensor. Since Cross Entropy Loss is the last layer, we can
-        compute the gradient at the forward pass. By doing so, we don't have to store the _input and target
+        """Fuse the last linear layer with cross-entropy loss.
+        
+        This function handles the forward and backward pass of the final linear layer via cross-entropy loss 
+        by avoiding the materialization of the large logits tensor. Since Cross Entropy Loss is the last layer, 
+        we can compute the gradient at the forward pass. By doing so, we don't have to store the input and target
         for the backward pass.
+        
+        Reference: https://github.com/mgmalek/efficient_cross_entropy
 
-        _input: (B*T, H) where B is batch size, T is sequence length, H is hidden dimension.
-        target: (B*T) where each value is in [0, V-1]
-        weight: (V, H) where V is the number of classes
-        bias: (V) where V is the number of classes
-        ce_weight: a manual rescaling weight given to each class. If given, has to be a Tensor of size V and floating point dtype
-        ignore_index: the index to ignore in the target
-        label_smoothing (float): The amount of smoothing when computing the loss, where 0.0 means no smoothing.
-        reduction: reduction to apply
-        accum_dtype (torch.dtype): the dtype of intermediate result buffers for weight and bias gradient accumulations.
-            Recommended to set `accum_dtype` to higher precision, e.g. `torch.float32`, if the training is unstable with original dtype. Default: `None`, performing accumulations in original dtype
-        use_token_scaling (bool): whether to scale each token's loss by its predicted probability (detached).
-            When True, each token's loss is multiplied by the model's predicted probability for that token's true class.
-            Default: False.
+        Args:
+            _input: (B*T, H) where B is batch size, T is sequence length, H is hidden dimension.
+            target: (B*T) where each value is in [0, V-1]
+            weight: (V, H) where V is the number of classes
+            bias: (V) where V is the number of classes
+            ce_weight: A manual rescaling weight given to each class. If given, has to be a Tensor of size V 
+                and floating point dtype
+            ignore_index: The index to ignore in the target
+            label_smoothing: The amount of smoothing when computing the loss, where 0.0 means no smoothing.
+            reduction: Reduction to apply
+            accum_dtype: The dtype of intermediate result buffers for weight and bias gradient accumulations.
+                Recommended to set `accum_dtype` to higher precision, e.g. `torch.float32`, if the training 
+                is unstable with original dtype. Default: `None`, performing accumulations in original dtype
+            use_token_scaling: Whether to scale each token's loss by its predicted probability (detached).
+                When True, each token's loss is multiplied by the model's predicted probability for that 
+                token's true class. Default: False.
         """
 
         loss, z_loss, grad_input, grad_weight, grad_bias = fused_linear_cross_entropy_forward(

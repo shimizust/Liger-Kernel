@@ -75,7 +75,7 @@ class LigerFusedLinearJSDFunction(LigerFusedLinearDistillationBase):
             temperature (float): Temperature for softening/sharpening distributions
             compiled (bool): Whether to use torch compile
             chunk_size (int): Size of chunks for processing.
-            
+
         Returns:
             torch.Tensor: Computed loss
         """

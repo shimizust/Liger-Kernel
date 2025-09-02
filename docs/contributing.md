@@ -100,8 +100,8 @@ We use GitHub Pages to host the detailed documentation. Documentation content is
 
 To preview the documentation locally, run the following commands:
 
-1. `pip install mkdocs mkdocs-material`
-2. `mkdocs serve`
+1. `pip install mkdocs mkdocs-material "mkdocstrings[python]"`
+2. `make serve`
 3. Open `http://127.0.0.1:8000/` in your browser
 4. Changes to `.md` files in the `/docs` directory will automatically reload the page.
 

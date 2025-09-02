@@ -17,7 +17,7 @@ class LigerFusedLinearDistillationBase(torch.autograd.Function):
         Args:
             student_logits (torch.Tensor): Raw (temperature-scaled) logits of student tokens. Shape: (batch_size * seq_len, vocab_size).
             teacher_logits (torch.Tensor): Raw (temperature-scaled) logits of teacher tokens. Shape: (batch_size * seq_len, vocab_size).
-        
+
         Returns:
             torch.Tensor: Sum of distillation losses for the chunk. The class will handle
                 converting this to mean loss by dividing by the full batch size * sequence length in _compute_loss.

@@ -137,7 +137,7 @@ class LigerFusedLinearGRPOFunction(LigerFusedLinearPPOBase):
             compiled (bool): Whether to use torch compile
             use_ref_model (bool): Whether to use a reference model
             chunk_size (int): Size of chunks for processing.
-            
+
         Returns:
             torch.Tensor: Computed loss
         """

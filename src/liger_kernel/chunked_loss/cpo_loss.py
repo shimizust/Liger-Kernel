@@ -74,7 +74,7 @@ class LigerFusedLinearCPOFunction(LigerFusedLinearPreferenceBase):
             compiled (bool): Whether to use torch compile
             average_log_prob (bool): Whether to average the log probability per non-masked token
             chunk_size (int): Size of chunks for processing.
-            
+
         Returns:
             torch.Tensor: Computed loss
         """

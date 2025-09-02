@@ -48,8 +48,8 @@ def liger_cross_entropy_kernel(
 ):
     """
     This kernel computes both cross entropy loss and the gradient of the input.
-    
-    We only consider hard label + mean reduction for now. Please refer to 
+
+    We only consider hard label + mean reduction for now. Please refer to
     https://pytorch.org/docs/stable/generated/torch.nn.CrossEntropyLoss.html for the math.
 
     Args:

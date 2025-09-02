@@ -179,20 +179,30 @@ class LigerFusedLinearJSDFunction(torch.autograd.Function):
         ignore_index: int = -100,
         temperature: float = 1.0,
     ):
-        """
-        Args:
+        """Forward pass for fused linear layer with generalized JSD loss.
+        
+        This function handles the forward pass of the final linear layer via generalized Jensen-Shannon 
+        Divergence (JSD) by avoiding the materialization of the large logits tensor. Since JSD is the 
+        last layer, we can compute the gradient at the forward pass.
 
-            student_input (torch.tensor): input of the last projection layer in student model, with shape (B*T, H), where B is batch size, T is sequence length, H is hidden dimension.
-            student_weight (torch.tensor): the last projection layer in student model, with shape (V, H), where V is vocab size
-            teacher_input (torch.tensor): input of the last projection layer in teacher model, with shape (B*T, H), where B is batch size, T is sequence length, H is hidden dimension.
-            teacher_weight (torch.tensor): the last projection layer in teacher model, with shape (V, H), where V is vocab size
-            shift_labels (Optional[torch.LongTensor]): indicator of next predicted vocab with shape (BT) where each value is in [0, V-1].
-            jsd_beta (float): coefficient beta of generalized JSD in the interval [0, 1]. It implements forward/reverse KL when beta equals 0 and 1 respectively. Default: `0.5`
-            ignore_index (int): the index to ignore. Default: -100
-            temperature (float): temperature in softmax function to control the output probability distribution. Default: `1.0`
+        Args:
+            student_input (torch.Tensor): Input of the last projection layer in student model, with shape (B*T, H), 
+                where B is batch size, T is sequence length, H is hidden dimension.
+            student_weight (torch.Tensor): The last projection layer in student model, with shape (V, H), 
+                where V is vocab size.
+            teacher_input (torch.Tensor): Input of the last projection layer in teacher model, with shape (B*T, H), 
+                where B is batch size, T is sequence length, H is hidden dimension.
+            teacher_weight (torch.Tensor): The last projection layer in teacher model, with shape (V, H), 
+                where V is vocab size.
+            shift_labels (Optional[torch.Tensor]): Indicator of next predicted vocab with shape (B*T) where each value is in [0, V-1].
+            jsd_beta (float): Coefficient beta of generalized JSD in the interval [0, 1]. It implements 
+                forward/reverse KL when beta equals 0 and 1 respectively. Default: 0.5.
+            ignore_index (int): The index to ignore. Default: -100.
+            temperature (float): Temperature in softmax function to control the output probability distribution. 
+                Default: 1.0.
 
         Returns:
-            loss (torch.Tensor): generalized JSD
+            loss (torch.Tensor): Generalized JSD loss tensor.
         """
         has_label = False
         if shift_labels is not None:
