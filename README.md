@@ -109,7 +109,6 @@ orpo_loss = LigerFusedLinearORPOLoss()
 y = orpo_loss(lm_head.weight, x, target)
 ```
 
-<<<<<<< HEAD
 ## High-level APIs
 
 ### AutoModel
@@ -192,8 +191,6 @@ y = orpo_loss(lm_head.weight, x, target)
 | Matmul int2xint8                | `liger_kernel.transformers.experimental.matmul` |
 
 
-=======
->>>>>>> 783741a (Refactored docs)
 ## Contributing, Acknowledgements, and License
 
 - [Contributing Guidelines](https://linkedin.github.io/Liger-Kernel/contributing/)

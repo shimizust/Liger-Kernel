@@ -9,11 +9,33 @@ from liger_kernel.ops.multi_token_attention import LigerMultiTokenAttentionFunct
 
 
 class LigerMultiTokenAttention(nn.Module):
-    """
-    Multi-Token Attention:
-        out = mask_{0}(conv2d(softmax(mask_{-\inf}(scores))))
-
-    Reference: https://arxiv.org/pdf/2504.00927
+    """Liger implementation of Multi Token Attention mechanism.
+    
+    Multi Token Attention is a new attention mechanism introduced by Meta Research that can operate 
+    on multiple Q and K inputs. This kernel implementation provides an optimized fused implementation 
+    of multi-token attention over the standard PyTorch model baseline.
+    
+    The operation can be mathematically described as:
+        out = mask_{0}(conv2d(softmax(mask_{-∞}(scores))))
+    
+    This implementation achieves significant speedups compared to the PyTorch baseline through 
+    fused operations that avoid intermediate materializations and provide better memory efficiency.
+    
+    Reference:
+        Meta Research. "Multi Token Attention."
+        https://arxiv.org/abs/2504.00927
+    
+    Args:
+        in_channels (int): Number of input channels.
+        out_channels (int): Number of output channels.
+        kernel_size (int): Size of the convolving kernel.
+        stride (int): Stride of the convolution. Default: 1.
+        padding (int): Padding added to all four sides of the input. Default: 0.
+        dilation (int): Spacing between kernel elements. Default: 1.
+        groups (int): Number of blocked connections from input channels to output channels. Default: 1.
+        bias (bool): If True, adds a learnable bias to the output. Default: True.
+        sparse (bool): If True, uses sparse operations for efficiency. Default: False.
+        
     """
 
     def __init__(

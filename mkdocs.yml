@@ -4,10 +4,8 @@ site_author: LinkedIn
 site_description: Efficient Triton Kernels for LLM Training
 nav:
   - Home: index.md
-  - Examples: examples.md
   - Getting Started: getting-started.md
-  - High Level APIs: high-level-apis.md
-  - Low Level APIs: low-level-apis.md
+  - Examples: examples.md
   - Contributing: contributing.md
   - Acknowledgment: acknowledgement.md
   - License: license.md

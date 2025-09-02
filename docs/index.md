@@ -100,6 +100,29 @@ y = orpo_loss(lm_head.weight, x, target)
 - **Multi-GPU supported:** Compatible with multi-GPU setups (PyTorch FSDP, DeepSpeed, DDP, etc.).
 - **Trainer Framework Integration**: [Axolotl](https://github.com/axolotl-ai-cloud/axolotl), [LLaMa-Factory](https://github.com/hiyouga/LLaMA-Factory), [SFTTrainer](https://github.com/huggingface/trl/releases/tag/v0.10.1), [Hugging Face Trainer](https://github.com/huggingface/transformers/pull/32860), [SWIFT](https://github.com/modelscope/ms-swift), [oumi](https://oumi.ai/)
 
+## Find What You Need
+
+### Learning & Examples
+New to Liger Kernel? Start here:
+
+- **[Getting Started](getting-started.md)**: Installation and first steps
+- **[Examples](examples.md)**: Real-world usage patterns and tutorials
+
+### Supported Models & Patching
+Looking to optimize existing transformer models? Check our **[Model Patching API](api/transformers/model-patch.md)** for:
+
+- **Supported Models**: Llama, Mistral, Qwen, Gemma, and many more
+- **One-Line Patching**: `apply_liger_kernel_to_llama()`
+- **AutoModel Integration**: Use **[AutoLigerKernelForCausalLM](api/transformers/auto-model.md)** as drop-in replacement
+
+### Individual Components & Modules  
+Want to use specific kernels or build custom models? Explore our **[API Reference](api/overview.md)**:
+
+- **[Transformers Components](api/transformers/modules.md)**: RMSNorm, RoPE, SwiGLU, CrossEntropy, and more
+- **[Chunked Loss Functions](api/chunked_loss.md)**: DPO, ORPO, SimPO, KTO for alignment training  
+- **[Triton Kernels](api/triton-ops.md)**: Core optimized kernels
+---
+
 ### Installation
 
 To install the stable version:

@@ -2,7 +2,7 @@ There are a couple of ways to apply Liger kernels, depending on the level of cus
 
 ### 1. Use AutoLigerKernelForCausalLM
 
-Using the `AutoLigerKernelForCausalLM` is the simplest approach, as you don't have to import a model-specific patching API. If the model type is supported, the modeling code will be automatically patched using the default settings.
+Using the [`AutoLigerKernelForCausalLM`](api/transformers/auto-model.md) is the simplest approach, as you don't have to import a model-specific patching API. If the model type is supported, the modeling code will be automatically patched using the default settings.
 
 !!! Example
 
@@ -16,7 +16,7 @@ Using the `AutoLigerKernelForCausalLM` is the simplest approach, as you don't ha
 
 ### 2. Apply Model-Specific Patching APIs
 
-Using the [patching APIs](https://github.com/linkedin/Liger-Kernel?tab=readme-ov-file#patching), you can swap Hugging Face models with optimized Liger Kernels.
+Using the [patching APIs](api/transformers/model-patch.md), you can swap Hugging Face models with optimized Liger Kernels.
 
 !!! Example
 
@@ -42,7 +42,7 @@ model = transformers.AutoModelForCausalLM("path/to/llama/model")
 
 ### 3. Compose Your Own Model
 
-You can take individual [kernels](https://github.com/linkedin/Liger-Kernel?tab=readme-ov-file#model-kernels) to compose your models.
+You can take individual [kernels](api/transformers/modules.md) to compose your models.
 
 !!! Example
 
