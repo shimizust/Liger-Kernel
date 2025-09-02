@@ -13,9 +13,27 @@ def _get_model_config(model_dir, **model_init_kwargs):
 
 
 class AutoLigerKernelForCausalLM(AutoModelForCausalLM):
-    """
-    This class is a drop-in replacement for AutoModelForCausalLM that applies the Liger Kernel to the model
-    if applicable.
+    """Drop-in replacement for AutoModelForCausalLM with automatic Liger Kernel optimizations.
+    
+    This class automatically applies Liger Kernel optimizations to supported transformer models
+    during model loading. It inherits all functionality from AutoModelForCausalLM while seamlessly
+    integrating memory-efficient and performance-optimized kernels.
+    
+    The class automatically detects the model type and applies the appropriate Liger Kernel
+    optimizations if the model architecture is supported. This includes optimized implementations
+    of normalization layers, activation functions, loss functions, and other operations.
+    
+    Usage:
+        ```python
+        from liger_kernel.transformers import AutoLigerKernelForCausalLM
+        
+        # Load a model with automatic Liger Kernel optimizations
+        model = AutoLigerKernelForCausalLM.from_pretrained("meta-llama/Llama-3.1-8B")
+        ```
+    
+    Note:
+        All parameters and functionality remain the same as AutoModelForCausalLM. The only
+        difference is that Liger Kernel optimizations are applied automatically when available.
     """
 
     @classmethod
