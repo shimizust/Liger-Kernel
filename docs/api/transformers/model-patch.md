@@ -34,7 +34,6 @@ The table below lists all currently supported models, the corresponding patching
 | Qwen3 MoE   | [apply_liger_kernel_to_qwen3_moe](#liger_kernel.transformers.monkey_patch.apply_liger_kernel_to_qwen3_moe) | RoPE, RMSNorm, SwiGLU, CrossEntropyLoss, FusedLinearCrossEntropy       |
 | SmolLM3     | [apply_liger_kernel_to_smollm3](#liger_kernel.transformers.monkey_patch.apply_liger_kernel_to_smollm3) | RoPE, RMSNorm, SwiGLU, CrossEntropyLoss, FusedLinearCrossEntropy |
 
-
 ## Example Usage
 
 ```python
