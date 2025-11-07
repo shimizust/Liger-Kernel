@@ -6,7 +6,9 @@ import time
 from contextlib import contextmanager
 import helion
 import helion.language as hl
-
+from typing import Tuple
+import os
+from helion.autotuner import PatternSearch
 
 DEVICE = driver.active.get_active_torch_device()
 
@@ -19,13 +21,7 @@ target = driver.active.get_current_target()
 
 print(f"NUM_SM: {NUM_SM}, NUM_REGS: {NUM_REGS}, SIZE_SMEM: {SIZE_SMEM}, WARP_SIZE: {WARP_SIZE}, target: {target}")
 
-# PyTorch softmax
-# In this case, we have 3 intermediate tensors: x_max, exp_x, and sum_exp
-def softmax_pytorch(x):
-    x_max = x.max(dim=-1, keepdim=True)[0]
-    exp_x = torch.exp(x - x_max)
-    sum_exp = exp_x.sum(dim=-1, keepdim=True)[0]
-    return exp_x / sum_exp
+
 
 
 @triton.jit
@@ -94,6 +90,90 @@ def softmax_triton(x):
     return y
 
 
+
+from liger_kernel.ops.utils import calculate_settings
+from liger_kernel.ops.utils import ensure_contiguous
+
+
+@triton.jit
+def _softmax_single_block_forward_kernel(
+    Y_ptr,
+    Y_row_stride,
+    X_ptr,
+    X_row_stride,
+    n_cols,
+    BLOCK_SIZE: tl.constexpr,
+):
+    row_id = tl.program_id(0)
+    offs = tl.arange(0, BLOCK_SIZE)
+    mask = offs < n_cols
+
+    x = tl.load(X_ptr + row_id * X_row_stride + offs, mask=mask, other=-float("inf"), cache_modifier=".ca")
+    m = tl.max(x, axis=0)
+    e = tl.exp(x - m)
+    d = tl.sum(e, axis=0)
+    y = e / d
+    tl.store(Y_ptr + row_id * Y_row_stride + offs, y, mask=mask, cache_modifier=".cs")
+
+@triton.jit
+def _softmax_multi_block_forward_kernel(
+    Y_ptr,
+    Y_row_stride,
+    X_ptr,
+    X_row_stride,
+    n_cols,
+    BLOCK_SIZE: tl.constexpr,
+):
+    row_id = tl.program_id(0)
+    offs = tl.arange(0, BLOCK_SIZE)
+
+    m = tl.float32(-float("inf"))
+    d = tl.float32(0.0)
+    for start in tl.range(0, n_cols, BLOCK_SIZE):
+        idx = start + offs
+        mask = idx < n_cols
+        xblk = tl.load(X_ptr + row_id * X_row_stride + idx, mask=mask, other=-float("inf"), cache_modifier=".ca")
+        blk_max = tl.max(xblk, axis=0)
+        new_m = tl.max(m, blk_max)
+        d = d * tl.exp(m - new_m) + tl.sum(tl.exp(xblk - new_m), axis=0)
+        m = new_m
+
+    for start in tl.range(0, n_cols, BLOCK_SIZE):
+        idx = start + offs
+        mask = idx < n_cols
+        xblk = tl.load(X_ptr + row_id * X_row_stride + idx, mask=mask, other=-float("inf"), cache_modifier=".ca")
+        yblk = tl.exp(xblk - m) / d
+        tl.store(Y_ptr + row_id * Y_row_stride + idx, yblk, mask=mask, cache_modifier=".cs")
+
+
+def softmax_liger_triton(x: torch.Tensor) -> torch.Tensor:
+    *batch, n_cols = x.shape
+    x2d = x.contiguous().view(-1, n_cols)
+    n_rows = x2d.shape[0]
+
+    BLOCK_SIZE, num_warps = calculate_settings(n_cols)
+    y2d = torch.empty_like(x2d)
+
+    if n_cols <= BLOCK_SIZE:
+        _softmax_single_block_forward_kernel[(n_rows,)](
+            y2d, y2d.stride(0), x2d, x2d.stride(0), n_cols, BLOCK_SIZE=BLOCK_SIZE, num_warps=num_warps
+        )
+        multi_block_launch = False
+    else:
+        _softmax_multi_block_forward_kernel[(n_rows,)](
+            y2d, y2d.stride(0), x2d, x2d.stride(0), n_cols, BLOCK_SIZE=BLOCK_SIZE, num_warps=num_warps
+        )
+        multi_block_launch = True
+
+    return y2d.view(*batch, n_cols)
+
+# PyTorch softmax
+def softmax_pytorch(x: torch.Tensor) -> torch.Tensor:
+    x_max = torch.amax(x, dim=-1, keepdim=True)
+    exp_x = torch.exp(x - x_max)
+    sum_exp = torch.sum(exp_x, dim=-1, keepdim=True)
+    return exp_x / sum_exp
+
 @helion.kernel()
 def softmax_helion(x: torch.Tensor) -> torch.Tensor:
     """
@@ -160,29 +240,60 @@ def memory_tracker(name=""):
         yield
 
 
+def run_autotune_softmax(inputs, initial_population=20, copies=4, max_generations=5):
+    bound = softmax_helion.bind(inputs)
+    tuner = PatternSearch(
+        bound,
+        inputs,
+        initial_population=initial_population,  # Default is 100.
+        copies=copies,               # Default is 5.
+        max_generations=max_generations,      # Default is 20.
+    )
+    best_config = tuner.autotune()
+    best_config.save("./helion/configs/softmax_helion_2.json")
+
+def generate_triton_code_from_helion(config: helion.Config) -> str:
+    x = torch.randn(4096, 4000, device="cuda", dtype=torch.float32)
+    bound = softmax_helion.bind((x,))
+    triton_code = bound.to_triton_code(config)
+    return triton_code
+
 if __name__ == "__main__":
     # Create input tensor
-    x = torch.randn(4096, 4096, device="cuda", dtype=torch.float32)
+    x = torch.randn(64000, 256, device="cuda", dtype=torch.float32)
+    run_autotune_softmax((x,), initial_population=10, copies=2, max_generations=2)
+
+    # config = helion.Config.load("./helion/configs/softmax_helion.json")
+    # triton_code = generate_triton_code_from_helion(config)
+    # print(triton_code)
+
+    # print(f"Input tensor shape: {x.shape}, dtype: {x.dtype}")
+    # print(f"Input tensor size: {x.numel() * x.element_size() / 1024**2:.2f} MB")
     
-    print(f"Input tensor shape: {x.shape}, dtype: {x.dtype}")
-    print(f"Input tensor size: {x.numel() * x.element_size() / 1024**2:.2f} MB")
+    # # Track the entire softmax operation
+    # with memory_tracker("softmax_pytorch"):
+    #     result = softmax_pytorch(x)
     
-    # Track the entire softmax operation
-    with memory_tracker("softmax_pytorch"):
-        result = softmax_pytorch(x)
+    # with memory_tracker("softmax_triton"):
+    #     result_triton = softmax_triton(x)
     
-    with memory_tracker("softmax_triton"):
-        result_triton = softmax_triton(x)
+    # with memory_tracker("softmax_liger_triton"):
+    #     result_liger_triton = softmax_liger_triton(x)
     
-    # with memory_tracker("softmax_helion"):
-    result_helion = softmax_helion(x)
+    # # with memory_tracker("softmax_helion"):
+    # print("\nRunning Helion softmax")
+    # os.environ["HELION_FORCE_AUTOTUNE"] = "1"
+    # os.environ["HELION_AUTOTUNE_EFFORT"] = "quick"
+    # os.environ["HELION_PRINT_OUTPUT_CODE"] = "1"
+    # result_helion = softmax_helion(x)
+    # print(result_helion)
     
-    # Compare with PyTorch's built-in softmax
-    print(f"\n{'='*60}")
-    print("Comparison with torch.nn.functional.softmax")
-    print(f"{'='*60}")
+    # # Compare with PyTorch's built-in softmax
+    # print(f"\n{'='*60}")
+    # print("Comparison with torch.nn.functional.softmax")
+    # print(f"{'='*60}")
     
-    with memory_tracker("torch.nn.functional.softmax"):
-        result_builtin = torch.nn.functional.softmax(x, dim=-1)
+    # with memory_tracker("torch.nn.functional.softmax"):
+    #     result_builtin = torch.nn.functional.softmax(x, dim=-1)
     
-    print(f"\nMax difference: {(result - result_builtin).abs().max().item():.2e}")
+    # print(f"\nMax difference: {(result - result_builtin).abs().max().item():.2e}")
