@@ -174,7 +174,14 @@ def softmax_pytorch(x: torch.Tensor) -> torch.Tensor:
     sum_exp = torch.sum(exp_x, dim=-1, keepdim=True)
     return exp_x / sum_exp
 
-@helion.kernel()
+# @helion.kernel()
+candidate_configs = [
+    helion.Config.load("./configs/softmax_small.json"),
+    helion.Config.load("./configs/softmax_medium.json"),
+    helion.Config.load("./configs/softmax_large.json"),
+]
+
+@helion.kernel(static_shapes=False, configs=candidate_configs)
 def softmax_helion(x: torch.Tensor) -> torch.Tensor:
     """
     Helion kernel implementing softmax by decomposing into max, exp, and normalization steps.
@@ -251,6 +258,65 @@ def run_autotune_softmax(inputs, initial_population=20, copies=4, max_generation
     )
     best_config = tuner.autotune()
     best_config.save("./helion/configs/softmax_helion_2.json")
+
+
+def generate_candidate_configs(output_dir="./configs"):
+    """
+    Generate and save multiple candidate configs for different workload sizes.
+    
+    This creates configs optimized for small, medium, and large tensor sizes,
+    which can then be used with @helion.kernel(configs=..., static_shapes=False)
+    
+    Args:
+        output_dir: Directory to save the config files
+    
+    Returns:
+        dict: Mapping of size tags to config paths
+    """
+    import os
+    os.makedirs(output_dir, exist_ok=True)
+    
+    # Define representative workload sizes
+    datasets = {
+        "small": torch.randn(1024, 256, device="cuda", dtype=torch.float32),      # 1K x 256
+        "medium": torch.randn(4096, 2048, device="cuda", dtype=torch.float32),    # 4K x 2K
+        "large": torch.randn(16384, 4096, device="cuda", dtype=torch.float32),    # 16K x 4K
+    }
+    
+    config_paths = {}
+    
+    print("=" * 80)
+    print("GENERATING CANDIDATE CONFIGS FOR DIFFERENT WORKLOAD SIZES")
+    print("=" * 80)
+    
+    for tag, x in datasets.items():
+        print(f"\nAutotuning for '{tag}' workload: shape {x.shape}")
+        print("-" * 80)
+        
+        # Run autotuning for this size
+        config = softmax_helion.autotune((x,))
+        
+        # Save the config
+        config_path = f"{output_dir}/softmax_{tag}.json"
+        config.save(config_path)
+        config_paths[tag] = config_path
+        
+        print(f"✓ Config saved to: {config_path}")
+    
+    print("\n" + "=" * 80)
+    print("CONFIG GENERATION COMPLETE")
+    print("=" * 80)
+    print("\nTo use these configs with bucketing, update your kernel definition:")
+    print("\ncandidate_configs = [")
+    for tag, path in config_paths.items():
+        print(f'    helion.Config.load("{path}"),  # {tag}')
+    print("]\n")
+    print("@helion.kernel(configs=candidate_configs, static_shapes=False)")
+    print("def softmax_helion(x: torch.Tensor) -> torch.Tensor:")
+    print("    ...")
+    print("=" * 80)
+    
+    return config_paths
 
 def generate_triton_code_from_helion(config: helion.Config) -> str:
     x = torch.randn(4096, 4000, device="cuda", dtype=torch.float32)

@@ -1,0 +1,40 @@
+BUCKETED CONFIG BENCHMARK METADATA
+================================================================================
+
+Bucketing Strategy: dynamic
+
+Training Shapes (used for compilation):
+  4096 x 256
+  1024 x 8192
+  4096 x 4096
+
+Test Shapes (unseen during compilation):
+  2048 x 512
+  8192 x 1024
+  512 x 16384
+  32768 x 128
+  2048 x 2048
+  16384 x 4096
+
+================================================================================
+
+NOTE:
+By default, Helion uses static_shapes=True (exact shape matching).
+To test true bucketing behavior, modify the @helion.kernel() decorator
+in softmax.py. Examples:
+
+1. Dynamic shape bucketing:
+   @helion.kernel(static_shapes=False)
+
+2. Power-of-two bucketing:
+   @helion.kernel(
+       key=lambda x: helion.next_power_of_2(x.numel()),
+       static_shapes=False
+   )
+
+3. Multiple candidate configs:
+   candidate_configs = [
+       helion.Config.load('config_small.json'),
+       helion.Config.load('config_large.json'),
+   ]
+   @helion.kernel(configs=candidate_configs, static_shapes=False)
